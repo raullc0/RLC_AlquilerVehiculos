@@ -10,11 +10,13 @@ package rlc_alquilervehiculos;
  */
 public class Vehiculo {
     // Atributos
+    
     private String matricula, marca, modelo;
     private int cilindrada;
     private boolean disponible;
     
     // Constructores
+    
     Vehiculo(String matricula, String marca, String modelo, int cilindrada)
     {
         this.matricula = matricula;
