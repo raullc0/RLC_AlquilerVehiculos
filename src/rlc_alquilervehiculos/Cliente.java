@@ -35,4 +35,40 @@ public class Cliente {
     }
     
     // Metodos
+    
+    public String getDni() 
+    {
+        return(dni);
+    }
+    
+    public String getNombre() 
+    {
+        return(nombre);
+    }
+    
+    public String getDireccion() 
+    {
+        return(direccion);
+    }
+    
+    public String getLocalidad() 
+    {
+        return(localidad);
+    }
+    
+    public String getCodigoPostal() 
+    {
+        return(codigoPostal);
+    }
+    
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() +
+                "\nDNI: " + dni +
+                "\nNombre: " + nombre + 
+                "\nDireccion: " + direccion +
+                "\nLocalidad: " + localidad +
+                "\nCodigo Postal: " + codigoPostal);
+    }
 }
