@@ -79,7 +79,17 @@ public class Utilidades {
         return valido;
     }
     
-    
+    public static boolean comprobarCodigoPostal(String codPostal) 
+    {
+        boolean valido = false;
+        Pattern patronCodPostal = Pattern.compile("^([0-4][0-9])|(5[0-2])\\d{3}$");
+        Matcher coincidirCodPostal = patronCodPostal.matcher(codPostal);
+        
+        if(coincidirCodPostal.find()) 
+            valido = true;
+        
+        return valido;
+    }
     
     
     
