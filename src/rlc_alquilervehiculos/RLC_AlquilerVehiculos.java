@@ -59,6 +59,7 @@ public class RLC_AlquilerVehiculos {
                     if (nClientes < clientes.length)
                         
                         anadirCliente(clientes[nClientes]);
+                   
                     else
                         ES.escribirCl("Error: No se pueden anadir mas clientes", "ANSI_RED");
                     break;
@@ -135,7 +136,6 @@ public class RLC_AlquilerVehiculos {
             nClientes++;
         } else
         {
-            nuevoCliente = null;
             System.out.println("El cliente ya existe. ");
         }
         
