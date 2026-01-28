@@ -29,6 +29,32 @@ public class ES
         System.out.print( _cadena );
     }
     
+    public static void escribirCl( String _cadena, String _color)
+    {
+        final String ANSI_BLACK = "\u001B[30m";
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_GREEN = "\u001B[32m";
+        final String ANSI_YELLOW = "\u001B[33m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_CYAN = "\u001B[36m";
+        final String ANSI_WHITE = "\u001B[37m";
+        final String ANSI_RESET = "\u001B[0m";
+        
+        switch(_color) 
+        {
+            case "ANSI_BLACK" -> System.out.printf(ANSI_BLACK + _cadena + ANSI_RESET);
+            case "ANSI_RED" -> System.out.printf(ANSI_RED + _cadena + ANSI_RESET);
+            case "ANSI_GREEN" -> System.out.printf(ANSI_GREEN + _cadena + ANSI_RESET);
+            case "ANSI_YELLOW" -> System.out.printf(ANSI_YELLOW + _cadena + ANSI_RESET);
+            case "ANSI_BLUE" -> System.out.printf(ANSI_BLUE + _cadena + ANSI_RESET);
+            case "ANSI_PURPLE" -> System.out.printf(ANSI_PURPLE+ _cadena + ANSI_RESET);
+            case "ANSI_CYAN" -> System.out.printf(ANSI_CYAN + _cadena + ANSI_RESET);
+            case "ANSI_WHITE" -> System.out.printf(ANSI_WHITE + _cadena + ANSI_RESET);
+        } 
+        
+    }
+    
     /**
      * Metodo: escribirLn(_msg: String): void
      * Escribe una linea de texto
@@ -38,6 +64,7 @@ public class ES
     {
         System.out.println( _cadena );
     }
+    
     
     /**
      * Metodo: leerBoolean(): boolean
@@ -280,7 +307,7 @@ public class ES
     
     public static int leerEntero()
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         int num = 0;
@@ -306,7 +333,7 @@ public class ES
     
     public static int leerEntero( String _msg)
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         int num = 0;
@@ -390,7 +417,7 @@ public class ES
     
     public static long leerEnteroLargo()
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         long num = 0;
@@ -417,7 +444,7 @@ public class ES
     
     public static long leerEnteroLargo(String _msg)
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         long num = 0;
@@ -443,7 +470,7 @@ public class ES
     
     public static float leerReal()
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         float num = 0f;
@@ -468,7 +495,7 @@ public class ES
     
     public static float leerReal(String _msg)
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         float num = 0f;
@@ -522,7 +549,7 @@ public class ES
     
     public static double leerRealLargo()
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         double num = 0;
@@ -547,7 +574,7 @@ public class ES
     
     public static double leerRealLargo(String _msg)
     {
-        Scanner s = new Scanner(System.in);
+        
         boolean datoValido = false;
         
         double num = 0;
@@ -571,6 +598,24 @@ public class ES
         return num ;
     }
     
+    public static boolean siono() 
+    {
+        boolean respuesta = false;
+        
+        String cadena = "" ;
+        cadena = s.nextLine();
+        
+        switch (cadena) 
+        {
+            case "Si", "si", "SI", "s", "S", "Yes", "YES", "Y", "y":
+                respuesta = true;
+                break;
+            default:
+                respuesta = false;
+        }
+        
+        return respuesta;
+    }
     
     
     

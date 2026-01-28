@@ -18,7 +18,7 @@ public class Utilidades {
     
     // Metodos
     
-    public static boolean comprobarMaricula(String matricula) 
+    public static boolean comprobarMatricula(String matricula) 
     {
         boolean valido = false;
         Pattern patronMatricula = Pattern.compile("^\\d{4}[A-Z]{3}$");
@@ -39,7 +39,7 @@ public class Utilidades {
         Matcher coincidirDni = patronDni.matcher(dni);
         
         Pattern patronNie = Pattern.compile("^[XYZ]\\d{7}[A-Z]$");
-        Matcher coincidirNie = patronDni.matcher(dni);
+        Matcher coincidirNie = patronNie.matcher(dni);
         String num = "";
         
         
@@ -50,7 +50,7 @@ public class Utilidades {
             String dniSinLetra = dni.substring(0, 8);
             int numerosDni = Integer.parseInt(dniSinLetra);
             
-            if (letrasDni[numerosDni%23] == dni.substring(8, 9))
+            if (letrasDni[numerosDni%23].equals(dni.substring(8, 9)))
                 valido = true;
             
         }
@@ -66,11 +66,13 @@ public class Utilidades {
                 case "Y" -> num = "1";
                 case "Z" -> num = "2";
             }
+            
                     
             String nieSinLetra = num + dni.substring(1, 8);
             int numerosNie = Integer.parseInt(nieSinLetra);
             
-            if (letrasNie[numerosNie%23] == dni.substring(8, 9))
+            
+            if (letrasNie[numerosNie%23].equals(dni.substring(8, 9)))
                 valido = true;
               
         }
