@@ -56,13 +56,10 @@ public class RLC_AlquilerVehiculos {
                         opcionMenu = -1;
                     break;
                 case 1:
-                    if (nClientes < clientes.length)
-                        
-                        anadirCliente(clientes[nClientes]);
-                   
-                    else
-                        ES.escribirCl("Error: No se pueden anadir mas clientes", "ANSI_RED");
+                    anadirCliente(pedirDatosCliente());
                     break;
+                    
+                    
                     
             }
         }
@@ -93,24 +90,7 @@ public class RLC_AlquilerVehiculos {
         
     }
     
-    private static Cliente getCliente(String _dni) 
-    {
-        boolean encontrado = false;
-        Cliente cliente = null;
-        
-        for( int i = 0; i < nClientes && !encontrado; i++)
-        {
-            if(clientes[i].getDni().equals(_dni)) 
-            {
-                encontrado = true;
-                cliente = clientes[i];
-            }
-        }
-        
-        return cliente;
-    }
-    
-    private static void anadirCliente(Cliente nuevoCliente) 
+    private static Cliente pedirDatosCliente() 
     {
         String dni, nombre, direccion, localidad, codigoPostal;
         
@@ -120,30 +100,79 @@ public class RLC_AlquilerVehiculos {
         }
         while (Utilidades.comprobarDni(dni) == false);
         
-        if (getCliente(dni) == null) 
-        {
-            nombre = ES.leerCadena("Introduzca su nombre: ");
-            direccion = ES.leerCadena("Intruzca su direccion: ");
-            localidad = ES.leerCadena("Introduzca su localidad: ");
+        nombre = ES.leerCadena("Introduzca su nombre: ");
+        direccion = ES.leerCadena("Intruzca su direccion: ");
+        localidad = ES.leerCadena("Introduzca su localidad: ");
         
-            do
+        do
+        {
+            codigoPostal = ES.leerCadena("Introduzca su codigo postal: ", 5);
+        }
+        while (Utilidades.comprobarCodigoPostal(codigoPostal) == false);
+        
+        Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
+        return cliente;
+    }
+    
+    private static Cliente getCliente(String _dni) 
+    {
+        boolean encontrado = false;
+        Cliente cliente = null;
+        
+        for( int i = 0; i < nClientes && !encontrado; i++)
+        {
+            if(clientes[i] != null)
             {
-                codigoPostal = ES.leerCadena("Introduzca su codigo postal: ", 5);
-            }
-            while (Utilidades.comprobarCodigoPostal(codigoPostal) == false);
-        
-            nuevoCliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
-            nClientes++;
-        } else
-        {
-            System.out.println("El cliente ya existe. ");
+                if(clientes[i].getDni().equals(_dni)) 
+                {
+                    encontrado = true;
+                    cliente = clientes[i];
+                }
+            }  
         }
         
+        return cliente;
+    }
+    
+    private static void anadirCliente(Cliente nuevoCliente) 
+    {
+        if (nClientes < MAX_CLIENTES) 
+        {
+            if (getCliente(nuevoCliente.getDni()) == null) 
+            {
+                clientes[nClientes] = nuevoCliente;
+                nClientes++;
+            }
+            else
+                ES.escribirCl("Eror: El cliente con dicho DNI ya existe\n", "ANSI_RED");
+        }
+        else
+            ES.escribirCl("Error: No hay mas espacio para nuevos clientes\n", "ANSI_RED");
     }
     
     private static void borrarCliente(String _dni) 
     {
         
+    }
+    
+    private static Vehiculo pedirDatosVehiculo() 
+    {
+        String matricula, marca, modelo;
+        int cilindrada;
+        
+        do 
+        {
+            matricula = ES.leerCadena("Introduca la matricula del vehiculo: ", 7);
+        }
+        while (Utilidades.comprobarMatricula(matricula) == false);
+        
+        marca = ES.leerCadena("Introduzca la marca del vehiculo: ");
+        modelo = ES.leerCadena("Intruzca sel modelo del vehiculo: ");
+        byte minimoCilindrada = 1;
+        cilindrada = ES.leerEntero("Introduzca la cilindrada del vehiculo: ", minimoCilindrada);
+        
+        Vehiculo vehiculo = new Vehiculo(matricula, marca, modelo, cilindrada);
+        return vehiculo;
     }
     
     private static Vehiculo getVehiculo(String _matricula)
