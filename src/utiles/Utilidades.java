@@ -62,9 +62,9 @@ public class Utilidades {
             
             switch (dni.substring(0, 1)) 
             {
-                case "X" -> num = "0";
-                case "Y" -> num = "1";
-                case "Z" -> num = "2";
+                case "x, X" -> num = "0";
+                case "y, Y" -> num = "1";
+                case "z, Z" -> num = "2";
             }
             
                     
