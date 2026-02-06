@@ -15,7 +15,12 @@ public class RLC_AlquilerVehiculos {
 
     // Atributos
     
-    private static final int MAX_VEHICULOS = 5;
+    /*
+        Importante: ya que los datos no se borran, 
+        se debe establecer un limite alto si se 
+        quieren cambiar datos con fecuencia
+    */
+    private static final int MAX_VEHICULOS = 5; 
     private static final int MAX_CLIENTES = 5;
     private static final int MAX_ALQUILERES = 5;
     
@@ -25,6 +30,7 @@ public class RLC_AlquilerVehiculos {
     
     public static int nClientes = 0;
     public static int nVehiculos = 0;
+    public static int nAlquileres = 0;
     
     
     // Main
@@ -64,6 +70,7 @@ public class RLC_AlquilerVehiculos {
                     anadirCliente(pedirDatosCliente());
                     break;
                 case 2:
+                    borrarCliente(pedirDatosCliente().getDni());
                     break;
                 case 3:
                     listarClientes();
@@ -73,16 +80,20 @@ public class RLC_AlquilerVehiculos {
                     anadirVehiculo(pedirDatosVehiculo());
                     break;
                 case 5:
+                    borrarVehiculo(pedirDatosVehiculo().getMatricula());
                     break;
                 case 6:
                     listarVehiculos();
                     ES.simularPausa();
                     break;
                 case 7:
+                    nuevoAlquiler(getCliente(pedirDatosCliente().getDni()), getVehiculo(pedirDatosVehiculo().getMatricula()));
                     break;
                 case 8:
                     break;
                 case 9:
+                    listarAlquileres();
+                    ES.simularPausa();
                     break;
                     
                     
@@ -101,10 +112,10 @@ public class RLC_AlquilerVehiculos {
         ES.escribirCl("Menu de opciones: \n", "ANSI_BLACK");
         ES.escribirLn("");
         ES.escribirCl("\t1. Anadir cliente\n", "ANSI_GREEN");
-        ES.escribirCl("\t2. Borrar cliente\n", "ANSI_GREEN");
+        ES.escribirCl("\t2. Dar de baja a cliente\n", "ANSI_GREEN");
         ES.escribirCl("\t3. Listar clientes\n", "ANSI_GREEN");
         ES.escribirCl("\t4. Anadir vehiculo\n", "ANSI_YELLOW");
-        ES.escribirCl("\t5. Borrar vehiculo\n", "ANSI_YELLOW");
+        ES.escribirCl("\t5. Dar de baja a vehiculo\n", "ANSI_YELLOW");
         ES.escribirCl("\t6. Listar vehiculos\n", "ANSI_YELLOW");
         ES.escribirCl("\t7. Abrir un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t8. Cerrar un alquiler\n", "ANSI_BLUE");
@@ -125,6 +136,7 @@ public class RLC_AlquilerVehiculos {
             dni = ES.leerCadena("Introduca su DNI/NIE: ", 9);
         }
         while (Utilidades.comprobarDni(dni) == false);
+        
         
         nombre = ES.leerCadena("Introduzca su nombre: ");
         direccion = ES.leerCadena("Intruzca su direccion: ");
@@ -178,14 +190,26 @@ public class RLC_AlquilerVehiculos {
     
     private static void borrarCliente(String _dni) 
     {
-        
+        // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
+        if (getCliente(_dni) != null) 
+        {
+            getCliente(_dni).toString();
+            ES.escribirCl("Esta seguro de dar de baja al cliente? Si/No\n", "ANSI_RED");
+            if (ES.siono() == true)
+                getCliente(_dni).darDeBaja();
+        }
+        else
+            ES.escribirCl("Error: El cliente con dicho DNI no existe.\n", "ANSI_RED");
     }
     
     private static void listarClientes() 
     {
         for (int i = 0; i < nClientes; i++) {
-            ES.escribir(clientes[i].toString());
-            ES.escribirLn("");
+            if (clientes[i].estaDeBaja() == false)
+            {
+                ES.escribir(clientes[i].toString());
+                ES.escribirLn("");
+            }
         }
     }
     
@@ -242,27 +266,61 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: No hay mas espacio para nuevos vehiculos\n", "ANSI_RED");
     }
     
-    private static void borrarVehiculo(String blabla) 
+    private static void borrarVehiculo(String _matricula) 
     {
-        
+        // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
+        if (getVehiculo(_matricula) != null) 
+        {
+            getVehiculo(_matricula).toString();
+            ES.escribirCl("Esta seguro de dar de baja al vehiculo? Si/No\n", "ANSI_RED");
+            if (ES.siono() == true)
+                getVehiculo(_matricula).darDeBaja();
+        }
+        else
+            ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe.\n", "ANSI_RED");
     }
     
     private static void listarVehiculos() 
     {
         for (int i = 0; i < nVehiculos; i++) {
-            ES.escribir(vehiculos[i].toString());
-            ES.escribirLn("");
+            if(vehiculos[i].estaDeBaja() == false)
+            {
+                ES.escribir(vehiculos[i].toString());
+                ES.escribirLn("");
+            }
         }
     }
     
     private static void nuevoAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
-        
+        if (getCliente(cliente.getDni()) != null && getVehiculo(vehiculo.getMatricula()) != null) 
+        {
+            if (nAlquileres < MAX_ALQUILERES) 
+            {
+                    alquileres[nAlquileres] = new Alquiler(cliente, vehiculo);
+                    nAlquileres++;
+            }
+            else
+                ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
+        }
+        else
+            ES.escribirCl("ERROR: El cliente y/o vehiculo indicados no existe(n). ", "ANSI_RED");
     }
     
     private static void cerrarAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
         
+    }
+    
+    private static void listarAlquileres() 
+    {
+        for (int i = 0; i < nAlquileres; i++) {
+            if(alquileres[i].getVehiculo().isDisponible() == false)
+            {
+                ES.escribir(alquileres[i].toString());
+                ES.escribirLn("");
+            }
+        }
     }
     
     

@@ -13,6 +13,7 @@ public class Cliente {
     // Atributos
     
     private String dni, nombre, direccion, localidad, codigoPostal;
+    private boolean deBaja;
     
     // Constructor
     
@@ -23,6 +24,7 @@ public class Cliente {
         this.direccion = direccion;
         this.localidad = localidad;
         this.codigoPostal = codigoPostal;
+        deBaja= false;
     }
     
     Cliente (Cliente otroCliente) 
@@ -32,6 +34,7 @@ public class Cliente {
         this.direccion = otroCliente.direccion;
         this.localidad = otroCliente.localidad;
         this.codigoPostal = otroCliente.codigoPostal;
+        this.deBaja = otroCliente.deBaja;
     }
     
     // Metodos
@@ -59,6 +62,16 @@ public class Cliente {
     public String getCodigoPostal() 
     {
         return(codigoPostal);
+    }
+    
+    public boolean estaDeBaja() 
+    {
+        return(deBaja);
+    }
+    
+    public void darDeBaja() 
+    {
+        deBaja = true;
     }
     
     @Override

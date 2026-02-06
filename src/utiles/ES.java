@@ -505,7 +505,7 @@ public class ES {
             cadena = s.nextLine();
             
             switch (cadena) {
-                case "Si", "si", "SI", "s", "S", "Yes", "YES", "Y", "y":
+                case "Si", "si", "SI", "s", "S", "Yes", "yes","YES", "y", "Y":
                     respuesta = true;
                     datoValido = true;
                     break;

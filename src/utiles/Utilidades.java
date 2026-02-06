@@ -21,6 +21,8 @@ public class Utilidades {
     public static boolean comprobarMatricula(String matricula) 
     {
         boolean valido = false;
+        matricula = ES.toUpperCase(matricula);
+        
         Pattern patronMatricula = Pattern.compile("^\\d{4}[A-Z]{3}$");
         Matcher coincidirMatricula = patronMatricula.matcher(matricula);
         
@@ -34,6 +36,7 @@ public class Utilidades {
     public static boolean comprobarDni(String dni) 
     {
         boolean valido = false;
+        dni = ES.toUpperCase(dni);
         
         Pattern patronDni = Pattern.compile("^\\d{8}[A-Z]$");
         Matcher coincidirDni = patronDni.matcher(dni);
@@ -62,9 +65,9 @@ public class Utilidades {
             
             switch (dni.substring(0, 1)) 
             {
-                case "x, X" -> num = "0";
-                case "y, Y" -> num = "1";
-                case "z, Z" -> num = "2";
+                case "X" -> num = "0";
+                case "Y" -> num = "1";
+                case "Z" -> num = "2";
             }
             
                     
@@ -84,6 +87,7 @@ public class Utilidades {
     public static boolean comprobarCodigoPostal(String codPostal) 
     {
         boolean valido = false;
+        
         Pattern patronCodPostal = Pattern.compile("^([0-4][0-9])|(5[0-2])\\d{3}$");
         Matcher coincidirCodPostal = patronCodPostal.matcher(codPostal);
         

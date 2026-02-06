@@ -14,6 +14,7 @@ public class Vehiculo {
     private String matricula, marca, modelo;
     private int cilindrada;
     private boolean disponible;
+    private boolean deBaja;
     
     // Constructores
     
@@ -23,6 +24,7 @@ public class Vehiculo {
         this.marca = marca;
         this.modelo = modelo;
         this.cilindrada = cilindrada;
+        deBaja = false;
     }
     
     Vehiculo(Vehiculo otroVehiculo) // Constructor copia
@@ -31,6 +33,7 @@ public class Vehiculo {
         this.marca = otroVehiculo.marca;
         this.modelo = otroVehiculo.modelo;
         this.cilindrada = otroVehiculo.cilindrada;
+        this.deBaja = otroVehiculo.deBaja;
     }
     
     // Metodos
@@ -62,6 +65,16 @@ public class Vehiculo {
     public boolean isDisponible() 
     {
         return(disponible);
+    }
+    
+    public boolean estaDeBaja() 
+    {
+        return(deBaja);
+    }
+    
+    public void darDeBaja() 
+    {
+        deBaja = true;
     }
     
     @Override
