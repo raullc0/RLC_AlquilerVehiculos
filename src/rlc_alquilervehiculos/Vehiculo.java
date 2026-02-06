@@ -68,10 +68,12 @@ public class Vehiculo {
     public String toString()
     {
         return( this.getClass().getSimpleName() +
+                "\n--------------------------------" +
                 "\nMatricula: " + matricula +
                 "\nMarca: " + marca + 
                 "\nModelo: " + modelo +
                 "\nCilindrada: " + cilindrada +
-                "\nDisponible: " + disponible);
+                "\nDisponible: " + disponible) +
+                "\n--------------------------------\n";
     }
 }

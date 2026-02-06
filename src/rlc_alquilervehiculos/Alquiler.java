@@ -77,10 +77,12 @@ public class Alquiler {
     public String toString()
     {
         return( this.getClass().getSimpleName() +
+                "\n--------------------------------" +
                 "\nCliente: " + cliente.toString() +
                 "\nTurismo: " + turismo.toString() + 
                 "\nDias: " + dias +
-                "\nCerrado: " + turismo.isDisponible()
+                "\nCerrado: " + turismo.isDisponible() +
+                "\n--------------------------------\n"
                 );
     }
     

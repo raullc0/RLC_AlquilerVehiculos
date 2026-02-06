@@ -43,6 +43,11 @@ public class RLC_AlquilerVehiculos {
         
         do 
         {
+            try 
+            {
+                new ProcessBuilder("cmd", "/C", "cls").inheritIO().start().waitFor();
+            }
+            catch (Exception e) {}
             menu();
             opcionMenu = ES.leerEntero();
             
@@ -57,6 +62,27 @@ public class RLC_AlquilerVehiculos {
                     break;
                 case 1:
                     anadirCliente(pedirDatosCliente());
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    listarClientes();
+                    ES.simularPausa();
+                    break;
+                case 4:
+                    anadirVehiculo(pedirDatosVehiculo());
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    listarVehiculos();
+                    ES.simularPausa();
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
                     break;
                     
                     
@@ -144,7 +170,7 @@ public class RLC_AlquilerVehiculos {
                 nClientes++;
             }
             else
-                ES.escribirCl("Eror: El cliente con dicho DNI ya existe\n", "ANSI_RED");
+                ES.escribirCl("Error: El cliente con dicho DNI ya existe\n", "ANSI_RED");
         }
         else
             ES.escribirCl("Error: No hay mas espacio para nuevos clientes\n", "ANSI_RED");
@@ -153,6 +179,14 @@ public class RLC_AlquilerVehiculos {
     private static void borrarCliente(String _dni) 
     {
         
+    }
+    
+    private static void listarClientes() 
+    {
+        for (int i = 0; i < nClientes; i++) {
+            ES.escribir(clientes[i].toString());
+            ES.escribirLn("");
+        }
     }
     
     private static Vehiculo pedirDatosVehiculo() 
@@ -192,14 +226,33 @@ public class RLC_AlquilerVehiculos {
         return vehiculo;
     }
     
-    private static void anadirVehiculo(Cliente nuevoVehiculo) 
+    private static void anadirVehiculo(Vehiculo nuevoVehiculo) 
     {
-        
+        if (nVehiculos < MAX_VEHICULOS) 
+        {
+            if (getVehiculo(nuevoVehiculo.getMatricula()) == null) 
+            {
+                vehiculos[nVehiculos] = nuevoVehiculo;
+                nVehiculos++;
+            }
+            else
+                ES.escribirCl("Error: El vehiculo con dicha matrícula ya existe\n", "ANSI_RED");
+        }
+        else
+            ES.escribirCl("Error: No hay mas espacio para nuevos vehiculos\n", "ANSI_RED");
     }
     
     private static void borrarVehiculo(String blabla) 
     {
         
+    }
+    
+    private static void listarVehiculos() 
+    {
+        for (int i = 0; i < nVehiculos; i++) {
+            ES.escribir(vehiculos[i].toString());
+            ES.escribirLn("");
+        }
     }
     
     private static void nuevoAlquiler(Cliente cliente, Vehiculo vehiculo)
