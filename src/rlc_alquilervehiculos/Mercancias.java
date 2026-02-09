@@ -69,4 +69,11 @@ public abstract class Mercancias extends Vehiculo
     {
         return volumen;
     }
+    
+    @Override
+    public String toString() {
+        return super.toString()
+                + "\n Peso Maximo Autorizado: " + pma
+                + "\n Volumen: " + volumen;
+    }
 }

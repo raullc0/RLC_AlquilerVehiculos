@@ -21,7 +21,7 @@ public class Familiar extends Turismo {
     
     // Constructor
     
-    Familiar (int nPlazas, boolean sillaBebe, String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
+    Familiar (int nPlazas, boolean sillaBebe, String matricula, String marca, String modelo, int cilindrada, Enumerados.TipoCombustible combustible, int nPuertas)
     {
         super(matricula, marca, modelo, cilindrada, combustible, nPuertas);
         
@@ -58,8 +58,15 @@ public class Familiar extends Turismo {
         return nPlazas;
     }
     
-    public int getTipoCombustible()
+    public Enumerados.TipoCombustible getTipoCombustible()
     {
         return combustible;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString()
+                + "\n Silla bebe: " + sillaBebe
+                + "\n Numero de plazas: " + nPlazas;
     }
 }

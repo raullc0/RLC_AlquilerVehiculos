@@ -13,11 +13,11 @@ public class Deportivo extends Turismo
     // Atributos
     
     private boolean descapotable;
-    private int cambio; // Enumerado
+    private Enumerados.CajaCambio cambio; // Enumerado
     
     // Constructor
     
-    Deportivo (int cambio, boolean descapotable, String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
+    Deportivo (Enumerados.CajaCambio cambio, boolean descapotable, String matricula, String marca, String modelo, int cilindrada, Enumerados.TipoCombustible combustible, int nPuertas)
     {
         super(matricula, marca, modelo, cilindrada, combustible, nPuertas);
         
@@ -27,7 +27,7 @@ public class Deportivo extends Turismo
     
     // Metodos
     
-    public int getCajaCambio()
+    public Enumerados.CajaCambio getCajaCambio()
     {
         return cambio;
     }
@@ -37,8 +37,15 @@ public class Deportivo extends Turismo
         return descapotable;
     }
     
-    public int getTipoCombustible()
+    public Enumerados.TipoCombustible getTipoCombustible()
     {
         return combustible;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString()
+                + "\n Descapotable: " + descapotable
+                + "\n Caja de cambios: " + cambio;
     }
 }

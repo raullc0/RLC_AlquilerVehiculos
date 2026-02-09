@@ -15,10 +15,10 @@ public abstract class Turismo extends Vehiculo
     // Atributos
     
     protected int nPuertas;
-    protected int combustible; // Tipo enumerado??
+    protected Enumerados.TipoCombustible combustible; // Tipo enumerado??
     
     // Constructor
-    Turismo(String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
+    Turismo(String matricula, String marca, String modelo, int cilindrada, Enumerados.TipoCombustible combustible, int nPuertas)
     {
         super(matricula, marca, modelo, cilindrada);
         this.nPuertas = nPuertas;
@@ -30,5 +30,12 @@ public abstract class Turismo extends Vehiculo
     public int getPuertas() 
     {
         return nPuertas;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString()
+                + "\n Puertas: " + nPuertas
+                + "\n Combustible: " + combustible;
     }
 }

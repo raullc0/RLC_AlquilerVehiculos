@@ -13,11 +13,11 @@ public class Furgoneta extends Mercancias {
     // Atributos
     
     private boolean refrigerado;
-    private int tamano; // Enumerado
+    private Enumerados.Tamano tamano; // Enumerado
     
     // Constructor
     
-    Furgoneta (boolean refrigerado, int tamano, int pma, int volumen, String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
+    Furgoneta (boolean refrigerado, Enumerados.Tamano tamano, int pma, int volumen, String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
     {
         super(pma, volumen, matricula, marca, modelo, cilindrada);
         
@@ -35,8 +35,15 @@ public class Furgoneta extends Mercancias {
         return refrigerado;
     }
     
-    public int getTamano()
+    public Enumerados.Tamano getTamano()
     {
         return tamano;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString()
+                + "\n Refrigeramiento: " + refrigerado
+                + "\n Tamanio: " + tamano;
     }
 }
