@@ -45,7 +45,8 @@ public class Deportivo extends Turismo
     @Override
     public String toString() {
         return super.toString()
-                + "\n Descapotable: " + descapotable
-                + "\n Caja de cambios: " + cambio;
+                + "\nDescapotable: " + descapotable
+                + "\nCaja de cambios: " + cambio +
+                "\n--------------------------------\n";
     }
 }

@@ -35,7 +35,7 @@ public abstract class Turismo extends Vehiculo
     @Override
     public String toString() {
         return super.toString()
-                + "\n Puertas: " + nPuertas
-                + "\n Combustible: " + combustible;
+                + "\nPuertas: " + nPuertas
+                + "\nCombustible: " + combustible;
     }
 }

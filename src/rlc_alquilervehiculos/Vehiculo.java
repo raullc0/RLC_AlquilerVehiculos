@@ -89,6 +89,6 @@ public abstract class Vehiculo {
                 "\nModelo: " + modelo +
                 "\nCilindrada: " + cilindrada +
                 "\nDisponible: " + disponible) +
-                "\n--------------------------------\n";
+                "\n";
     }
 }

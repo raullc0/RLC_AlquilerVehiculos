@@ -74,20 +74,28 @@ public class RLC_AlquilerVehiculos {
                     borrarCliente(pedirDNI());
                     break;
                 case 3:
-                    listarClientes();
+                    listarClientes(false);
                     ES.simularPausa();
                     break;
                 case 4:
-                    anadirVehiculo(pedirDatosVehiculo());
-                    break;
-                case 5:
-                    borrarVehiculo(pedirMatricula());
-                    break;
-                case 6:
-                    listarVehiculos();
+                    listarClientes(true);
                     ES.simularPausa();
                     break;
+                case 5:
+                    anadirVehiculo(pedirDatosVehiculo());
+                    break;
+                case 6:
+                    borrarVehiculo(pedirMatricula());
+                    break;
                 case 7:
+                    listarVehiculos(false);
+                    ES.simularPausa();
+                    break;
+                case 8:
+                    listarVehiculos(true);
+                    ES.simularPausa();
+                    break;
+                case 9:
                     dni = pedirDNI();
                     matricula = pedirMatricula();
                     
@@ -104,7 +112,7 @@ public class RLC_AlquilerVehiculos {
                         ES.escribirCl("Error: El cliente con dicho DNI no existe", "ANSI_RED");
 
                     break;
-                case 8:
+                case 10:
                     dni = pedirDNI();
                     matricula = pedirMatricula();
                     
@@ -121,13 +129,10 @@ public class RLC_AlquilerVehiculos {
                         ES.escribirCl("Error: El cliente con dicho DNI no existe", "ANSI_RED");
                     
                     break;
-                case 9:
+                case 11:
                     listarAlquileres();
                     ES.simularPausa();
-                    break;
-                    
-                    
-                    
+                    break;    
             }
         }
         while(opcionMenu != 0);
@@ -144,12 +149,14 @@ public class RLC_AlquilerVehiculos {
         ES.escribirCl("\t1. Anadir cliente\n", "ANSI_GREEN");
         ES.escribirCl("\t2. Dar de baja a cliente\n", "ANSI_GREEN");
         ES.escribirCl("\t3. Listar clientes\n", "ANSI_GREEN");
-        ES.escribirCl("\t4. Anadir vehiculo\n", "ANSI_CYAN");
-        ES.escribirCl("\t5. Dar de baja a vehiculo\n", "ANSI_CYAN");
-        ES.escribirCl("\t6. Listar vehiculos\n", "ANSI_CYAN");
-        ES.escribirCl("\t7. Abrir un alquiler\n", "ANSI_BLUE");
-        ES.escribirCl("\t8. Cerrar un alquiler\n", "ANSI_BLUE");
-        ES.escribirCl("\t9. Listar alquileres\n", "ANSI_BLUE");
+        ES.escribirCl("\t4. Listar clientes dados de baja\n", "ANSI_GREEN");
+        ES.escribirCl("\t5. Anadir vehiculo\n", "ANSI_CYAN");
+        ES.escribirCl("\t6. Dar de baja a vehiculo\n", "ANSI_CYAN");
+        ES.escribirCl("\t7. Listar vehiculos\n", "ANSI_CYAN");
+        ES.escribirCl("\t8. Listar vehiculos dados de baja\n", "ANSI_CYAN");
+        ES.escribirCl("\t9. Abrir un alquiler\n", "ANSI_BLUE");
+        ES.escribirCl("\t10. Cerrar un alquiler\n", "ANSI_BLUE");
+        ES.escribirCl("\t11. Listar alquileres\n", "ANSI_BLUE");
         ES.escribirLn("");
         ES.escribirCl("0. SALIR\n", "ANSI_BLACK");
         ES.escribirCl("--------------------------------\n", "ANSI_PURPLE");
@@ -248,10 +255,10 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: El cliente con dicho DNI no existe.\n", "ANSI_RED");
     }
     
-    private static void listarClientes() 
+    private static void listarClientes(boolean deBaja) 
     {
         for (int i = 0; i < nClientes; i++) {
-            if (clientes[i].estaDeBaja() == false)
+            if (clientes[i].estaDeBaja() == deBaja)
             {
                 ES.escribir(clientes[i].toString());
                 ES.escribirLn("");
@@ -323,9 +330,9 @@ public class RLC_AlquilerVehiculos {
     private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada)
     {
         int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
-        int nPlazas = ES.leerEntero("Número de plazas (4-7): ", (byte) 4, (byte) 7);
+        int nPlazas = ES.leerEntero("Introduzca el numero de plazas (4-7): ", (byte) 4, (byte) 7);
         
-        ES.escribirLn("¿Tiene silla de bebé? Si/No");
+        ES.escribirLn("Tiene silla de bebe? Si/No");
         boolean sillaBebe = ES.siono();
 
         Enumerados.TipoCombustible combustible =
@@ -418,10 +425,10 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe.\n", "ANSI_RED");
     }
     
-    private static void listarVehiculos() 
+    private static void listarVehiculos(boolean deBaja) 
     {
         for (int i = 0; i < nVehiculos; i++) {
-            if(vehiculos[i].estaDeBaja() == false)
+            if(vehiculos[i].estaDeBaja() == deBaja)
             {
                 ES.escribir(vehiculos[i].toString());
                 ES.escribirLn("");

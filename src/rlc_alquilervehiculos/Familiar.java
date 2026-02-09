@@ -66,7 +66,8 @@ public class Familiar extends Turismo {
     @Override
     public String toString() {
         return super.toString()
-                + "\n Silla bebe: " + sillaBebe
-                + "\n Numero de plazas: " + nPlazas;
+                + "\nSilla bebe: " + sillaBebe
+                + "\nNumero de plazas: " + nPlazas +
+                "\n--------------------------------\n";
     }
 }
