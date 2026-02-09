@@ -42,7 +42,7 @@ public class Furgoneta extends Mercancias {
     public String toString() {
         return super.toString()
                 + "\nRefrigeramiento: " + refrigerado
-                + "\nTamanio: " + tamano +
+                + "\nTamano: " + tamano +
                 "\n--------------------------------\n";
     }
 }
