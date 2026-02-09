@@ -523,7 +523,7 @@ public class ES {
     public static void simularPausa() 
     {
         Scanner waitForKeypress = new Scanner(System.in);
-        ES.escribirLn("PRESIONE ENTER PARA CONTINUAR ...");
+        ES.escribirLn("\nPRESIONE ENTER PARA CONTINUAR ...");
         waitForKeypress.nextLine();
     }
     

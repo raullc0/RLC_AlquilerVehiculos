@@ -24,6 +24,7 @@ public class Vehiculo {
         this.marca = marca;
         this.modelo = modelo;
         this.cilindrada = cilindrada;
+        disponible = true;
         deBaja = false;
     }
     
@@ -33,6 +34,7 @@ public class Vehiculo {
         this.marca = otroVehiculo.marca;
         this.modelo = otroVehiculo.modelo;
         this.cilindrada = otroVehiculo.cilindrada;
+        this.disponible = otroVehiculo.disponible;
         this.deBaja = otroVehiculo.deBaja;
     }
     

@@ -78,7 +78,7 @@ public class Cliente {
     public String toString()
     {
         return( this.getClass().getSimpleName() +
-                "\n---------------------------------" +
+                "\n--------------------------------" +
                 "\nDNI: " + dni +
                 "\nNombre: " + nombre + 
                 "\nDireccion: " + direccion +

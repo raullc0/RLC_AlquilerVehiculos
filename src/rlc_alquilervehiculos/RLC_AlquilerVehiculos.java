@@ -46,6 +46,7 @@ public class RLC_AlquilerVehiculos {
         
         // Logica del programa
         int opcionMenu = 0;
+        String dni, matricula;
         
         do 
         {
@@ -70,7 +71,7 @@ public class RLC_AlquilerVehiculos {
                     anadirCliente(pedirDatosCliente());
                     break;
                 case 2:
-                    borrarCliente(pedirDatosCliente().getDni());
+                    borrarCliente(pedirDNI());
                     break;
                 case 3:
                     listarClientes();
@@ -80,16 +81,45 @@ public class RLC_AlquilerVehiculos {
                     anadirVehiculo(pedirDatosVehiculo());
                     break;
                 case 5:
-                    borrarVehiculo(pedirDatosVehiculo().getMatricula());
+                    borrarVehiculo(pedirMatricula());
                     break;
                 case 6:
                     listarVehiculos();
                     ES.simularPausa();
                     break;
                 case 7:
-                    nuevoAlquiler(getCliente(pedirDatosCliente().getDni()), getVehiculo(pedirDatosVehiculo().getMatricula()));
+                    dni = pedirDNI();
+                    matricula = pedirMatricula();
+                    
+                    if (getCliente(dni) != null)
+                    {
+                        if (getVehiculo(matricula) != null)
+                        {
+                            nuevoAlquiler(getCliente(dni), getVehiculo(matricula));
+                        }
+                        else
+                            ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe", "ANSI_RED");
+                    }
+                    else
+                        ES.escribirCl("Error: El cliente con dicho DNI no existe", "ANSI_RED");
+
                     break;
                 case 8:
+                    dni = pedirDNI();
+                    matricula = pedirMatricula();
+                    
+                    if (getCliente(dni) != null)
+                    {
+                        if (getVehiculo(matricula) != null)
+                        {
+                            cerrarAlquiler(getCliente(dni), getVehiculo(matricula));
+                        }
+                        else
+                            ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe", "ANSI_RED");
+                    }
+                    else
+                        ES.escribirCl("Error: El cliente con dicho DNI no existe", "ANSI_RED");
+                    
                     break;
                 case 9:
                     listarAlquileres();
@@ -137,6 +167,7 @@ public class RLC_AlquilerVehiculos {
         }
         while (Utilidades.comprobarDni(dni) == false);
         
+        dni = ES.toUpperCase(dni);
         
         nombre = ES.leerCadena("Introduzca su nombre: ");
         direccion = ES.leerCadena("Intruzca su direccion: ");
@@ -150,6 +181,21 @@ public class RLC_AlquilerVehiculos {
         
         Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
         return cliente;
+    }
+    
+    private static String pedirDNI() 
+    {
+        String dni;
+        
+        do 
+        {
+            dni = ES.leerCadena("Introduca su DNI/NIE: ", 9);
+        }
+        while (Utilidades.comprobarDni(dni) == false);
+        
+        dni = ES.toUpperCase(dni);
+        
+        return dni;
     }
     
     private static Cliente getCliente(String _dni) 
@@ -224,13 +270,30 @@ public class RLC_AlquilerVehiculos {
         }
         while (Utilidades.comprobarMatricula(matricula) == false);
         
+        matricula = ES.toUpperCase(matricula);
+        
         marca = ES.leerCadena("Introduzca la marca del vehiculo: ");
-        modelo = ES.leerCadena("Intruzca sel modelo del vehiculo: ");
+        modelo = ES.leerCadena("Intruzca el modelo del vehiculo: ");
         byte minimoCilindrada = 1;
         cilindrada = ES.leerEntero("Introduzca la cilindrada del vehiculo: ", minimoCilindrada);
         
         Vehiculo vehiculo = new Vehiculo(matricula, marca, modelo, cilindrada);
         return vehiculo;
+    }
+    
+    private static String pedirMatricula() 
+    {
+        String matricula;
+        
+        do 
+        {
+            matricula = ES.leerCadena("Introduca la matricula del vehiculo: ", 7);
+        }
+        while (Utilidades.comprobarMatricula(matricula) == false);
+        
+        matricula = ES.toUpperCase(matricula);
+        
+        return matricula;
     }
     
     private static Vehiculo getVehiculo(String _matricula)
@@ -293,7 +356,7 @@ public class RLC_AlquilerVehiculos {
     
     private static void nuevoAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
-        if (getCliente(cliente.getDni()) != null && getVehiculo(vehiculo.getMatricula()) != null) 
+        if (vehiculo.isDisponible() == true) 
         {
             if (nAlquileres < MAX_ALQUILERES) 
             {
@@ -304,17 +367,40 @@ public class RLC_AlquilerVehiculos {
                 ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
         }
         else
-            ES.escribirCl("ERROR: El cliente y/o vehiculo indicados no existe(n). ", "ANSI_RED");
+            ES.escribirCl("ERROR: El vehiculo no esta disponible para alquilar. ", "ANSI_RED");
     }
     
+    @SuppressWarnings("DeadBranch")
     private static void cerrarAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
+        boolean encontrado = false;
         
+        if (vehiculo.isDisponible() == false) 
+        {
+            for (int i = 0; i < nAlquileres; i++) 
+            {
+                if(alquileres[i].getCliente() == cliente)
+                {
+                    alquileres[i].cerrar();
+                    encontrado = true;
+                    ES.escribirCl("Alquiler cerrado con exito\n", "ANSI_GREEN");
+                    ES.simularPausa();
+                }
+            }
+        }
+        else
+            ES.escribirCl("ERROR: El vehiculo no esta en ningun alquiler actualmente. ", "ANSI_RED");
+        
+        if (encontrado == false)
+        {
+            ES.escribirCl("ERROR: No se ha encontrado un alquiler con los requisitos especificados. ", "ANSI_RED");
+        }
     }
     
     private static void listarAlquileres() 
     {
-        for (int i = 0; i < nAlquileres; i++) {
+        for (int i = 0; i < nAlquileres; i++) 
+        {
             if(alquileres[i].getVehiculo().isDisponible() == false)
             {
                 ES.escribir(alquileres[i].toString());

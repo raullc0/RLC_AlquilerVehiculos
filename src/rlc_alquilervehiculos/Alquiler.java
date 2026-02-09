@@ -22,17 +22,17 @@ public class Alquiler {
     private int dias;
     
     private Cliente cliente;
-    private Vehiculo turismo;
+    private Vehiculo vehiculo;
     
     // Constructores
     
-    Alquiler(Cliente cliente, Vehiculo turismo) 
+    Alquiler(Cliente cliente, Vehiculo vehiculo) 
     {
         this.cliente = cliente;
-        this.turismo = turismo;
+        this.vehiculo = vehiculo;
         this.fecha = LocalDateTime.now();
         this.dias = 0;
-        turismo.setDisponible(false);
+        vehiculo.setDisponible(false);
     }
     
     // Metodos
@@ -44,7 +44,7 @@ public class Alquiler {
     
     public Vehiculo getVehiculo()
     {
-        return turismo;
+        return vehiculo;
     }
     
     public LocalDateTime getFecha() 
@@ -59,7 +59,7 @@ public class Alquiler {
     
     public double precioAlquiler()
     {
-        return PRECIO_DIA * getDias() + turismo.getCilindrada() / 100;
+        return PRECIO_DIA * getDias() + vehiculo.getCilindrada() / 100;
     }
     
     private int diferenciaDias(LocalDateTime fecha) 
@@ -69,7 +69,7 @@ public class Alquiler {
     
     public void cerrar() 
     {
-        turismo.setDisponible(true);
+        vehiculo.setDisponible(true);
         this.dias = getDias();
     }
     
@@ -79,9 +79,9 @@ public class Alquiler {
         return( this.getClass().getSimpleName() +
                 "\n--------------------------------" +
                 "\nCliente: " + cliente.toString() +
-                "\nTurismo: " + turismo.toString() + 
+                "\nTurismo: " + vehiculo.toString() + 
                 "\nDias: " + dias +
-                "\nCerrado: " + turismo.isDisponible() +
+                "\nCerrado: " + vehiculo.isDisponible() +
                 "\n--------------------------------\n"
                 );
     }
