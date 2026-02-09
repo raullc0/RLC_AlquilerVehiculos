@@ -20,9 +20,9 @@ public class RLC_AlquilerVehiculos {
         se debe establecer un limite alto si se 
         quieren cambiar datos con fecuencia
     */
-    private static final int MAX_VEHICULOS = 5; 
-    private static final int MAX_CLIENTES = 5;
-    private static final int MAX_ALQUILERES = 5;
+    private static final int MAX_VEHICULOS = 50; 
+    private static final int MAX_CLIENTES = 50;
+    private static final int MAX_ALQUILERES = 50;
     
     private static Vehiculo [] vehiculos;
     private static Cliente [] clientes;

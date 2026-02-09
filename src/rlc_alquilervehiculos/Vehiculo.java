@@ -8,7 +8,7 @@ package rlc_alquilervehiculos;
  *
  * @author dam1
  */
-public class Vehiculo {
+public abstract class Vehiculo {
     // Atributos
     
     private String matricula, marca, modelo;
