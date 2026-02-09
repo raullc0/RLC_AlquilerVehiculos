@@ -370,7 +370,7 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("ERROR: El vehiculo no esta disponible para alquilar. ", "ANSI_RED");
     }
     
-    @SuppressWarnings("DeadBranch")
+    
     private static void cerrarAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
         boolean encontrado = false;
