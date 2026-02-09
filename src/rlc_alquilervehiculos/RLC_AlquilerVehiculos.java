@@ -144,9 +144,9 @@ public class RLC_AlquilerVehiculos {
         ES.escribirCl("\t1. Anadir cliente\n", "ANSI_GREEN");
         ES.escribirCl("\t2. Dar de baja a cliente\n", "ANSI_GREEN");
         ES.escribirCl("\t3. Listar clientes\n", "ANSI_GREEN");
-        ES.escribirCl("\t4. Anadir vehiculo\n", "ANSI_YELLOW");
-        ES.escribirCl("\t5. Dar de baja a vehiculo\n", "ANSI_YELLOW");
-        ES.escribirCl("\t6. Listar vehiculos\n", "ANSI_YELLOW");
+        ES.escribirCl("\t4. Anadir vehiculo\n", "ANSI_CYAN");
+        ES.escribirCl("\t5. Dar de baja a vehiculo\n", "ANSI_CYAN");
+        ES.escribirCl("\t6. Listar vehiculos\n", "ANSI_CYAN");
         ES.escribirCl("\t7. Abrir un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t8. Cerrar un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t9. Listar alquileres\n", "ANSI_BLUE");
@@ -259,7 +259,8 @@ public class RLC_AlquilerVehiculos {
         }
     }
     
-    private static Vehiculo pedirDatosVehiculo() 
+    
+    private static Vehiculo pedirDatosVehiculo()
     {
         String matricula, marca, modelo;
         int cilindrada;
@@ -277,8 +278,82 @@ public class RLC_AlquilerVehiculos {
         byte minimoCilindrada = 1;
         cilindrada = ES.leerEntero("Introduzca la cilindrada del vehiculo: ", minimoCilindrada);
         
-        Vehiculo vehiculo = new Vehiculo(matricula, marca, modelo, cilindrada);
+        // Separacion por vehiculo
+        
+        int tipoVehiculo;
+        Vehiculo vehiculo = null;
+
+        ES.escribirLn("\nEliga el tipo de vehiculo.");
+        ES.escribirLn("1.- Deportivo");
+        ES.escribirLn("2.- Familiar");
+        ES.escribirLn("3.- Furgoneta");
+
+        tipoVehiculo = ES.leerEntero("", (byte) 1, (byte) 3);
+
+        switch (tipoVehiculo) {
+            case 1 -> vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada);
+            case 2 -> vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada);
+            case 3 -> vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada);
+        }
+        
         return vehiculo;
+    }
+    
+    private static Deportivo datosDeportivo(String matricula, String marca, String modelo, int cilindrada)
+    {
+        
+        int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
+
+        Enumerados.TipoCombustible combustible =
+            Enumerados.TipoCombustible.valueOf(
+                ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase()
+            );
+
+        Enumerados.CajaCambio cambio =
+            Enumerados.CajaCambio.valueOf(
+                ES.leerCadena("Introduzca el tipo de caja der cambio (Manual/Automatica): ").toUpperCase()
+            );
+
+        ES.escribirLn("Es el deportivo descapotable? Si/No");
+        boolean descapotable = ES.siono();
+
+        return new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+    }
+    
+    private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada)
+    {
+        int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
+        int nPlazas = ES.leerEntero("Número de plazas (4-7): ", (byte) 4, (byte) 7);
+        
+        ES.escribirLn("¿Tiene silla de bebé? Si/No");
+        boolean sillaBebe = ES.siono();
+
+        Enumerados.TipoCombustible combustible =
+            Enumerados.TipoCombustible.valueOf(
+                ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase()
+            );
+
+
+        return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+    }
+    
+    private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada)
+    {
+        
+        int pma = ES.leerEntero("Introduzca el Peso Maximo Autorizado: ", (byte)1);
+        int volumen = ES.leerEntero("Introduzca el volumen: ", (byte)1);
+
+        ES.escribirLn("Esta refrigerada? Si/No: ");
+        boolean refrigerado = ES.siono();
+
+        
+        
+        Enumerados.Tamano tamano =
+            Enumerados.Tamano.valueOf(
+                ES.leerCadena("Introduzca el tamano (Grande/Mediana/Pequenia): ").toUpperCase()
+            );
+
+        return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
     }
     
     private static String pedirMatricula() 

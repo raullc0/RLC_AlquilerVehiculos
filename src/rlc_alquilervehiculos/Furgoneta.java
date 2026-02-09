@@ -17,15 +17,13 @@ public class Furgoneta extends Mercancias {
     
     // Constructor
     
-    Furgoneta (boolean refrigerado, Enumerados.Tamano tamano, int pma, int volumen, String matricula, String marca, String modelo, int cilindrada, int combustible, int nPuertas)
+    Furgoneta (boolean refrigerado, Enumerados.Tamano tamano, int pma, int volumen, String matricula, String marca, String modelo, int cilindrada)
     {
         super(pma, volumen, matricula, marca, modelo, cilindrada);
         
         this.refrigerado = refrigerado;
         this.tamano = tamano;
-        
-        combustible = 1;
-        nPuertas = 4;
+
     }
     
     // Metodos
