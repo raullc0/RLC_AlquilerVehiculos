@@ -311,15 +311,36 @@ public class RLC_AlquilerVehiculos {
         
         int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
 
-        Enumerados.TipoCombustible combustible =
-            Enumerados.TipoCombustible.valueOf(
-                ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase()
-            );
-
-        Enumerados.CajaCambio cambio =
-            Enumerados.CajaCambio.valueOf(
-                ES.leerCadena("Introduzca el tipo de caja der cambio (Manual/Automatica): ").toUpperCase()
-            );
+        Enumerados.TipoCombustible combustible = null;
+        do 
+        {
+            try {
+                combustible =
+                    Enumerados.TipoCombustible.valueOf(
+                            ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase() 
+                    );
+            }
+            catch (Exception e){};
+        }
+        while (combustible != Enumerados.TipoCombustible.GASOLINA ||
+                combustible != Enumerados.TipoCombustible.DIESEL ||
+                combustible != Enumerados.TipoCombustible.HIBRIDO ||
+                combustible != Enumerados.TipoCombustible.ELECTRICO);
+        
+        Enumerados.CajaCambio cambio = null;
+        do
+        {
+            try 
+            {
+                cambio =
+                    Enumerados.CajaCambio.valueOf(
+                        ES.leerCadena("Introduzca el tipo de caja der cambio (Manual/Automatica): ").toUpperCase()
+                    );
+            }
+            catch (Exception e) {}
+        }
+        while (cambio != Enumerados.CajaCambio.MANUAL ||
+                cambio != Enumerados.CajaCambio.AUTOMATICA);
 
         ES.escribirLn("Es el deportivo descapotable? Si/No");
         boolean descapotable = ES.siono();
@@ -335,11 +356,21 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("Tiene silla de bebe? Si/No");
         boolean sillaBebe = ES.siono();
 
-        Enumerados.TipoCombustible combustible =
-            Enumerados.TipoCombustible.valueOf(
-                ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase()
-            );
-
+        Enumerados.TipoCombustible combustible = null;
+        do 
+        {
+            try {
+                combustible =
+                    Enumerados.TipoCombustible.valueOf(
+                            ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase() 
+                    );
+            }
+            catch (Exception e){};
+        }
+        while (combustible != Enumerados.TipoCombustible.GASOLINA ||
+                combustible != Enumerados.TipoCombustible.DIESEL ||
+                combustible != Enumerados.TipoCombustible.HIBRIDO ||
+                combustible != Enumerados.TipoCombustible.ELECTRICO);
 
         return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
@@ -353,12 +384,21 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("Esta refrigerada? Si/No: ");
         boolean refrigerado = ES.siono();
 
-        
-        
-        Enumerados.Tamano tamano =
-            Enumerados.Tamano.valueOf(
-                ES.leerCadena("Introduzca el tamano (Grande/Mediana/Pequenia): ").toUpperCase()
-            );
+        Enumerados.Tamano tamano = null;
+        do
+        {
+            try
+            {
+                tamano =
+                    Enumerados.Tamano.valueOf(
+                        ES.leerCadena("Introduzca el tamano (Grande/Mediana/Pequena): ").toUpperCase()
+                    );
+            }
+            catch (Exception e){}
+        }
+        while (tamano != Enumerados.Tamano.GRANDE ||
+                tamano != Enumerados.Tamano.MEDIANA ||
+                tamano != Enumerados.Tamano.PEQUENA);
 
         return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
     }
