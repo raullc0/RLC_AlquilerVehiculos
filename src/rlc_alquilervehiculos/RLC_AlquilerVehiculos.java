@@ -311,36 +311,9 @@ public class RLC_AlquilerVehiculos {
         
         int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
 
-        Enumerados.TipoCombustible combustible = null;
-        do 
-        {
-            try {
-                combustible =
-                    Enumerados.TipoCombustible.valueOf(
-                            ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase() 
-                    );
-            }
-            catch (Exception e){};
-        }
-        while (combustible != Enumerados.TipoCombustible.GASOLINA ||
-                combustible != Enumerados.TipoCombustible.DIESEL ||
-                combustible != Enumerados.TipoCombustible.HIBRIDO ||
-                combustible != Enumerados.TipoCombustible.ELECTRICO);
+        Enumerados.TipoCombustible combustible = tipoCombustible();
         
-        Enumerados.CajaCambio cambio = null;
-        do
-        {
-            try 
-            {
-                cambio =
-                    Enumerados.CajaCambio.valueOf(
-                        ES.leerCadena("Introduzca el tipo de caja der cambio (Manual/Automatica): ").toUpperCase()
-                    );
-            }
-            catch (Exception e) {}
-        }
-        while (cambio != Enumerados.CajaCambio.MANUAL ||
-                cambio != Enumerados.CajaCambio.AUTOMATICA);
+        Enumerados.CajaCambio cambio = cajaCambio();
 
         ES.escribirLn("Es el deportivo descapotable? Si/No");
         boolean descapotable = ES.siono();
@@ -356,24 +329,12 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("Tiene silla de bebe? Si/No");
         boolean sillaBebe = ES.siono();
 
-        Enumerados.TipoCombustible combustible = null;
-        do 
-        {
-            try {
-                combustible =
-                    Enumerados.TipoCombustible.valueOf(
-                            ES.leerCadena("Introduzca el tipo de combustible (Gasolina/Diesel/Hibrido/Electrico): ").toUpperCase() 
-                    );
-            }
-            catch (Exception e){};
-        }
-        while (combustible != Enumerados.TipoCombustible.GASOLINA ||
-                combustible != Enumerados.TipoCombustible.DIESEL ||
-                combustible != Enumerados.TipoCombustible.HIBRIDO ||
-                combustible != Enumerados.TipoCombustible.ELECTRICO);
+        Enumerados.TipoCombustible combustible = tipoCombustible();
 
         return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
+    
+    
     
     private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada)
     {
@@ -384,23 +345,72 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("Esta refrigerada? Si/No: ");
         boolean refrigerado = ES.siono();
 
-        Enumerados.Tamano tamano = null;
-        do
-        {
-            try
-            {
-                tamano =
-                    Enumerados.Tamano.valueOf(
-                        ES.leerCadena("Introduzca el tamano (Grande/Mediana/Pequena): ").toUpperCase()
-                    );
-            }
-            catch (Exception e){}
-        }
-        while (tamano != Enumerados.Tamano.GRANDE ||
-                tamano != Enumerados.Tamano.MEDIANA ||
-                tamano != Enumerados.Tamano.PEQUENA);
+        Enumerados.Tamano tamano = tamano();
 
         return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
+    }
+    
+    private static Enumerados.TipoCombustible tipoCombustible()
+    {
+        int nComb = ES.leerEntero("Introduzca el tipo de combustible:\n\t1 - Gasolina\n\t2 - Diesel\n\t3 - Hibrido\n\t4 - Electrico\n", (byte) 1, (byte) 4);
+        Enumerados.TipoCombustible combustible = null;
+        
+        switch (nComb) 
+        {
+            case 1:
+                combustible = Enumerados.TipoCombustible.GASOLINA;
+                break;
+            case 2:
+                combustible = Enumerados.TipoCombustible.DIESEL;
+                break;
+            case 3:
+                combustible = Enumerados.TipoCombustible.HIBRIDO;
+                break;
+            case 4:
+                combustible = Enumerados.TipoCombustible.ELECTRICO;
+                break;
+        }
+        
+        return combustible;
+    }
+    
+    private static Enumerados.CajaCambio cajaCambio()
+    {
+        int nCamb = ES.leerEntero("Introduzca el tipo de caja der cambio:\n\t1 - Manual\n\t2 - Automatica\n", (byte) 1, (byte) 2);
+        Enumerados.CajaCambio cambio = null;
+        
+        switch (nCamb) 
+        {
+            case 1:
+                cambio = Enumerados.CajaCambio.MANUAL;
+                break;
+            case 2:
+                cambio = Enumerados.CajaCambio.AUTOMATICA;
+                break;
+        }
+        
+        return cambio;
+    }
+    
+    private static Enumerados.Tamano tamano()
+    {
+        int nTam = ES.leerEntero("Introduzca el tamano:\n\t1 - Grande\n\t2 - Mediana\n\t3 - Pequena\n", (byte) 1, (byte) 3);
+        Enumerados.Tamano tamano = null;
+        
+        switch (nTam) 
+        {
+            case 1:
+                tamano = Enumerados.Tamano.GRANDE;
+                break;
+            case 2:
+                tamano = Enumerados.Tamano.MEDIANA;
+                break;
+            case 3:
+                tamano = Enumerados.Tamano.PEQUENA;
+                break;
+        }
+        
+        return tamano;
     }
     
     private static String pedirMatricula() 
