@@ -281,7 +281,7 @@ public class RLC_AlquilerVehiculos {
         matricula = ES.toUpperCase(matricula);
         
         marca = ES.leerCadena("Introduzca la marca del vehiculo: ");
-        modelo = ES.leerCadena("Intruzca el modelo del vehiculo: ");
+        modelo = ES.leerCadena("Introduzca el modelo del vehiculo: ");
         byte minimoCilindrada = 1;
         cilindrada = ES.leerEntero("Introduzca la cilindrada del vehiculo: ", minimoCilindrada);
         

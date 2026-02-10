@@ -23,7 +23,7 @@ public class Utilidades {
         boolean valido = false;
         matricula = ES.toUpperCase(matricula);
         
-        Pattern patronMatricula = Pattern.compile("^\\d{4}[A-Z]{3}$");
+        Pattern patronMatricula = Pattern.compile("^[0-9]{1,4}(?!.*(LL|CH))[BCDFGHJKLMNPRSTVWXYZ]{3}$");
         Matcher coincidirMatricula = patronMatricula.matcher(matricula);
         
         if(coincidirMatricula.find()) 
