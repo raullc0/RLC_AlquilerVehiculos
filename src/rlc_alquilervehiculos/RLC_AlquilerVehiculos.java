@@ -164,6 +164,7 @@ public class RLC_AlquilerVehiculos {
         
     }
     
+    
     private static Cliente pedirDatosCliente() 
     {
         String dni, nombre, direccion, localidad, codigoPostal;
@@ -190,6 +191,7 @@ public class RLC_AlquilerVehiculos {
         return cliente;
     }
     
+    
     private static String pedirDNI() 
     {
         String dni;
@@ -204,6 +206,7 @@ public class RLC_AlquilerVehiculos {
         
         return dni;
     }
+    
     
     private static Cliente getCliente(String _dni) 
     {
@@ -225,6 +228,7 @@ public class RLC_AlquilerVehiculos {
         return cliente;
     }
     
+    
     private static void anadirCliente(Cliente nuevoCliente) 
     {
         if (nClientes < MAX_CLIENTES) 
@@ -241,6 +245,7 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: No hay mas espacio para nuevos clientes\n", "ANSI_RED");
     }
     
+    
     private static void borrarCliente(String _dni) 
     {
         // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
@@ -254,6 +259,7 @@ public class RLC_AlquilerVehiculos {
         else
             ES.escribirCl("Error: El cliente con dicho DNI no existe.\n", "ANSI_RED");
     }
+    
     
     private static void listarClientes(boolean deBaja) 
     {
@@ -306,6 +312,7 @@ public class RLC_AlquilerVehiculos {
         return vehiculo;
     }
     
+    
     private static Deportivo datosDeportivo(String matricula, String marca, String modelo, int cilindrada)
     {
         
@@ -321,6 +328,7 @@ public class RLC_AlquilerVehiculos {
         return new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
     
+    
     private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada)
     {
         int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
@@ -333,7 +341,6 @@ public class RLC_AlquilerVehiculos {
 
         return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
-    
     
     
     private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada)
@@ -349,6 +356,7 @@ public class RLC_AlquilerVehiculos {
 
         return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
     }
+    
     
     private static Enumerados.TipoCombustible tipoCombustible()
     {
@@ -374,6 +382,7 @@ public class RLC_AlquilerVehiculos {
         return combustible;
     }
     
+    
     private static Enumerados.CajaCambio cajaCambio()
     {
         int nCamb = ES.leerEntero("Introduzca el tipo de caja der cambio:\n\t1 - Manual\n\t2 - Automatica\n", (byte) 1, (byte) 2);
@@ -391,6 +400,7 @@ public class RLC_AlquilerVehiculos {
         
         return cambio;
     }
+    
     
     private static Enumerados.Tamano tamano()
     {
@@ -413,6 +423,7 @@ public class RLC_AlquilerVehiculos {
         return tamano;
     }
     
+    
     private static String pedirMatricula() 
     {
         String matricula;
@@ -427,6 +438,7 @@ public class RLC_AlquilerVehiculos {
         
         return matricula;
     }
+    
     
     private static Vehiculo getVehiculo(String _matricula)
     {
@@ -445,6 +457,7 @@ public class RLC_AlquilerVehiculos {
         return vehiculo;
     }
     
+    
     private static void anadirVehiculo(Vehiculo nuevoVehiculo) 
     {
         if (nVehiculos < MAX_VEHICULOS) 
@@ -461,6 +474,7 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: No hay mas espacio para nuevos vehiculos\n", "ANSI_RED");
     }
     
+    
     private static void borrarVehiculo(String _matricula) 
     {
         // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
@@ -475,6 +489,7 @@ public class RLC_AlquilerVehiculos {
             ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe.\n", "ANSI_RED");
     }
     
+    
     private static void listarVehiculos(boolean deBaja) 
     {
         for (int i = 0; i < nVehiculos; i++) {
@@ -485,6 +500,7 @@ public class RLC_AlquilerVehiculos {
             }
         }
     }
+    
     
     private static void nuevoAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
@@ -529,6 +545,7 @@ public class RLC_AlquilerVehiculos {
         }
     }
     
+    
     private static void listarAlquileres() 
     {
         for (int i = 0; i < nAlquileres; i++) 
@@ -540,7 +557,6 @@ public class RLC_AlquilerVehiculos {
             }
         }
     }
-    
     
     
 }

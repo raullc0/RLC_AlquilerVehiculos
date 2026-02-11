@@ -4,7 +4,10 @@
  */
 package utiles;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.Scanner;
+
 
 /**
  *
@@ -531,5 +534,30 @@ public class ES {
     {
         return string.toUpperCase();
     }
+    
+    public static boolean escribirArchivo(String ruta, String datos, boolean sobreescribir)
+    {
+        FileWriter archivo;
+        
+        try
+        {
+            archivo = new FileWriter(ruta, !sobreescribir);
+            
+            archivo.write(datos);
+            archivo.close();
+        }
+        catch(FileNotFoundException e) 
+        {
+            ES.escribirCl("Error (escribirArchivo): Archivo no encontrado. " + e, "ANSI_RED");
+        }
+        catch(Exception e)
+        {
+            ES.escribirCl("Error (escribirArchivo): " + e, "ANSI_RED");
+        }
+        
+        return false;
+    }
+    
+    
 
 }
