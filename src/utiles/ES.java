@@ -23,14 +23,18 @@ public class ES {
     static Scanner s = new Scanner(System.in);
 
     /**
-     * Metodo: escribir(_msg: String): void Escribe una cadena
-     *
-     * @param _cadena Cadena a introducir
+     * Metodo: escribir(_msg: String): void Escribe una cadena.
+     * @param _cadena Cadena a escribir
      */
     public static void escribir(String _cadena) {
         System.out.print(_cadena);
     }
 
+    /**
+     * Metodo: escribirCl(String _cadena, String _color): void Escribe una cadena en un color especificado.
+     * @param _cadena Cadena a escribir
+     * @param _color Color a utilizar. Lista limitada : "ANSI_"+[BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE]
+     */
     public static void escribirCl(String _cadena, String _color) {
         final String ANSI_BLACK = "\u001B[30m";
         final String ANSI_RED = "\u001B[31m";
@@ -64,8 +68,7 @@ public class ES {
     }
 
     /**
-     * Metodo: escribirLn(_msg: String): void Escribe una linea de texto
-     *
+     * Metodo: escribirLn(String _cadena): void Escribe una linea de texto.
      * @param _cadena Cadena a introducir
      */
     public static void escribirLn(String _cadena) {
@@ -73,8 +76,7 @@ public class ES {
     }
 
     /**
-     * Metodo: leerBoolean(): boolean Lee y valida un boolean
-     *
+     * Metodo: leerBoolean(): boolean Lee un boolean-
      * @return Devuelve el valor del boolean
      */
     public static boolean leerBoolean() {
@@ -95,6 +97,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerBoolean(String _msg): boolean Lee un boolean y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuelve el valor del boolean
+     */
     public static boolean leerBoolean(String _msg) {
         boolean datoValido = false;
 
@@ -113,7 +120,11 @@ public class ES {
 
         return num;
     }
-
+    
+    /**
+     * Metodo: leerByte(): byte Lee un byte.
+     * @return Devuelve el valor del byte
+     */
     public static byte leerByte() {
         boolean datoValido = false;
 
@@ -132,6 +143,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerByte(String _msg): byte Lee un byte y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuelve el valor del byte
+     */
     public static byte leerByte(String _msg) {
         boolean datoValido = false;
 
@@ -151,6 +167,13 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerByte(String _msg, byte _min, byte _max): byte Lee un byte (entre un minimo y un maximo) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _min Minimo valor del byte
+     * @param _max Maximo valor del byte
+     * @return Devuelve el valor del byte
+     */
     public static byte leerByte(String _msg, byte _min, byte _max) {
 
         boolean datoValido = false;
@@ -174,7 +197,11 @@ public class ES {
 
         return num;
     }
-
+    
+    /**
+     * Metodo: leerCadena(): String Lee una cadena.
+     * @return Devuelve el valor de la cadena
+     */
     public static String leerCadena() {
         String cadena = "";
 
@@ -183,6 +210,11 @@ public class ES {
         return cadena;
     }
 
+    /**
+     * Metodo: leerCadena(): String Lee una cadena y escribe un menaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuleve el valor de la cadena
+     */
     public static String leerCadena(String _msg) {
         String cadena = "";
         System.out.print(_msg);
@@ -192,6 +224,12 @@ public class ES {
         return cadena;
     }
 
+    /**
+     * Metodo: leerCadena(String _msg, int _longitud): String Lee una cadena (de una longitud indicada) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _longitud Longitud de la cadena
+     * @return Devuleve el valor de la cadena
+     */
     public static String leerCadena(String _msg, int _longitud) {
 
         boolean datoValido = false;
@@ -216,6 +254,10 @@ public class ES {
         return cadena;
     }
 
+    /**
+     * Metodo: leerCaracter(): String Lee una cadena de longitud 1. Debe hacerse un parseChar() para obtener un char.
+     * @return Devuleve el valor de la cadena
+     */
     public static String leerCaracter() {
 
         boolean datoValido = false;
@@ -239,6 +281,11 @@ public class ES {
         return cadena;
     }
 
+    /**
+     * Metodo: leerCaracter(String _msg): String Lee una cadena de longitud 1 y escribe un mensaje. Debe hacerse un parseChar() para obtener un char.
+     * @param _msg Mensaje a escribir
+     * @return Devuleve el valor de la cadena
+     */
     public static String leerCaracter(String _msg) {
 
         boolean datoValido = false;
@@ -263,6 +310,10 @@ public class ES {
         return cadena;
     }
 
+    /**
+     * Metodo: leerEntero(): int Lee un int.
+     * @return Devuleve el valor del int
+     */
     public static int leerEntero() {
 
         boolean datoValido = false;
@@ -283,6 +334,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerEntero(String _msg): int Lee un int y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuleve el valor del int
+     */
     public static int leerEntero(String _msg) {
 
         boolean datoValido = false;
@@ -304,6 +360,12 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerEntero(String _msg, byte _min): int Lee un int (con un minimo especificado) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _min Minimo valor del int
+     * @return Devuleve el valor del int
+     */
     public static int leerEntero(String _msg, byte _min) {
 
         boolean datoValido = false;
@@ -328,6 +390,13 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerEntero(String _msg, byte _min, byte _max): int Lee un int (con un minimo y maximo especificados) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _min Minimo valor del int
+     * @param _max Maximo valor del int
+     * @return Devuleve el valor del int
+     */
     public static int leerEntero(String _msg, byte _min, byte _max) {
 
         boolean datoValido = false;
@@ -352,6 +421,10 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerEnteroLargo(): long Lee un long.
+     * @return Devuelve el valor del long
+     */
     public static long leerEnteroLargo() {
 
         boolean datoValido = false;
@@ -372,6 +445,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerEnteroLargo(String _msg): long Lee un long y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuelve el valor del long
+     */
     public static long leerEnteroLargo(String _msg) {
 
         boolean datoValido = false;
@@ -393,6 +471,10 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerReal(): float Lee un float.
+     * @return Devuelve el valor del float
+     */
     public static float leerReal() {
 
         boolean datoValido = false;
@@ -413,6 +495,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerReal(String _msg): float Lee un float y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuelve el valor del float
+     */
     public static float leerReal(String _msg) {
 
         boolean datoValido = false;
@@ -434,6 +521,12 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerReal(String _msg, byte _min): float Lee un float (con un minimo especificado) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _min Valor minimo del float
+     * @return Devuelve el valor del float
+     */
     public static float leerReal(String _msg, byte _min) {
 
         boolean datoValido = false;
@@ -458,6 +551,10 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerRealLargo(): double Lee un double.
+     * @return Devuelve el valor del double
+     */
     public static double leerRealLargo() {
 
         boolean datoValido = false;
@@ -478,6 +575,11 @@ public class ES {
         return num;
     }
 
+    /**
+     * Metodo: leerRealLargo(String _msg): double Lee un double y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @return Devuelve el valor del double
+     */
     public static double leerRealLargo(String _msg) {
 
         boolean datoValido = false;
@@ -498,7 +600,11 @@ public class ES {
 
         return num;
     }
-
+    
+    /**
+     * Metodo: siono(): boolean Lee mensajes arbitrarios del usuario de si y no.
+     * @return Devuelve un boolean. Si(true),  No(false).
+     */
     public static boolean siono() {
         boolean respuesta = false;
         boolean datoValido = false;
@@ -523,6 +629,9 @@ public class ES {
         return respuesta;
     }
     
+    /**
+     * Metodo: simularPausa(): void Simula una pausa y espera a que el usuario pulse intro.
+     */
     public static void simularPausa() 
     {
         Scanner waitForKeypress = new Scanner(System.in);
@@ -530,14 +639,27 @@ public class ES {
         waitForKeypress.nextLine();
     }
     
+    /**
+     * Metodo: toUpperCase(String string): String Cambia una cadena a MAYUSCULAS.
+     * @param string Cadena a introducir
+     * @return Cadena en mayusculas.
+     */
     public static String toUpperCase(String string) 
     {
         return string.toUpperCase();
     }
     
+    /**
+     * Metodo: escribirArchivo(String ruta, String datos, boolean sobreescribir): boolean Escribe datos en un archivo de ruta elegida, sobreescribiendo o no
+     * @param ruta Ruta del archivo
+     * @param datos Datos a escribir
+     * @param sobreescribir Boolean que indica si el dato debe sobreescribir o no.
+     * @return Indica si los datos se han escrito con exito.
+     */
     public static boolean escribirArchivo(String ruta, String datos, boolean sobreescribir)
     {
         FileWriter archivo;
+        boolean exito = false;
         
         try
         {
@@ -545,6 +667,7 @@ public class ES {
             
             archivo.write(datos);
             archivo.close();
+            exito = true;
         }
         catch(FileNotFoundException e) 
         {
@@ -555,9 +678,8 @@ public class ES {
             ES.escribirCl("Error (escribirArchivo): " + e, "ANSI_RED");
         }
         
-        return false;
+        return exito;
     }
     
-    
-
+ 
 }
