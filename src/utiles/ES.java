@@ -6,6 +6,9 @@ package utiles;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 
@@ -603,7 +606,7 @@ public class ES {
     
     /**
      * Metodo: siono(): boolean Lee mensajes arbitrarios del usuario de si y no.
-     * @return Devuelve un boolean. Si(true),  No(false).
+     * @return Devuelve un boolean. Si(true),  No(false)
      */
     public static boolean siono() {
         boolean respuesta = false;
@@ -642,7 +645,7 @@ public class ES {
     /**
      * Metodo: toUpperCase(String string): String Cambia una cadena a MAYUSCULAS.
      * @param string Cadena a introducir
-     * @return Cadena en mayusculas.
+     * @return Cadena en mayusculas
      */
     public static String toUpperCase(String string) 
     {
@@ -654,7 +657,7 @@ public class ES {
      * @param ruta Ruta del archivo
      * @param datos Datos a escribir
      * @param sobreescribir Boolean que indica si el dato debe sobreescribir o no.
-     * @return Indica si los datos se han escrito con exito.
+     * @return Indica si los datos se han escrito con exito
      */
     public static boolean escribirArchivo(String ruta, String datos, boolean sobreescribir)
     {
@@ -679,6 +682,28 @@ public class ES {
         }
         
         return exito;
+    }
+    
+    /**
+     * Metodo: leerArchivo(String ruta): String Lee datos de un archivo de una ruta elegida.
+     * @param ruta Ruta del archivo
+     * @return Indica si los datos se han escrito con exito
+     */
+    public static String leerArchivo(String ruta)
+    {
+        String contenido = null;
+        
+        try {
+            contenido = Files.readString(Path.of(ruta));
+            if (!contenido.isEmpty())
+                ES.escribirLn("Leyendo el contenido del fichero...");
+        } catch (IOException e) {
+            ES.escribirCl("ERROR (leerArchivo): " + e, "ANSI_RED");
+        }
+        
+        ES.escribir(contenido.isEmpty() + " "+ contenido.isBlank());
+        
+        return contenido;
     }
     
  
