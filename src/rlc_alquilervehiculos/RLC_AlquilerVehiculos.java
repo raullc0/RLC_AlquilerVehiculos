@@ -70,6 +70,13 @@ public class RLC_AlquilerVehiculos {
                     
                     if (respuesta == false)
                         opcionMenu = -1;
+                    
+                    ES.escribirCl("Desea guardar los datos?\nSi / No\n", "ANSI_GREEN");
+                    boolean guardar = ES.siono();
+                    
+                    if(guardar)
+                        guardarDatos();
+                    
                     break;
                 case 1:
                     anadirCliente(pedirDatosCliente());
