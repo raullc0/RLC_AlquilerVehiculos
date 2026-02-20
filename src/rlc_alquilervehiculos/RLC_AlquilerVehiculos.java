@@ -20,12 +20,16 @@ public class RLC_AlquilerVehiculos {
         se debe establecer un limite alto si se 
         quieren cambiar datos con fecuencia
     */
-    private static final int MAX_VEHICULOS = 50; 
+    public static final String RUTA_CLIENTES = "datos\\clientes_RLC.txt";
+    public static final String RUTA_VEHICULOS = "datos\\vehiculos_RLC.txt";
+    public static final String RUTA_ALQUILERES = "datos\\alquileres_RLC.txt";
+    
     private static final int MAX_CLIENTES = 50;
+    private static final int MAX_VEHICULOS = 50; 
     private static final int MAX_ALQUILERES = 50;
     
-    private static Vehiculo [] vehiculos;
     private static Cliente [] clientes;
+    private static Vehiculo [] vehiculos;
     private static Alquiler [] alquileres;
     
     public static int nClientes = 0;
@@ -132,7 +136,10 @@ public class RLC_AlquilerVehiculos {
                 case 11:
                     listarAlquileres();
                     ES.simularPausa();
-                    break;    
+                    break;
+                case 12:
+                    guardarDatos();
+                    break;
             }
         }
         while(opcionMenu != 0);
@@ -157,6 +164,8 @@ public class RLC_AlquilerVehiculos {
         ES.escribirCl("\t9. Abrir un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t10. Cerrar un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t11. Listar alquileres\n", "ANSI_BLUE");
+        ES.escribirLn("");
+        ES.escribirLn("\t12. Guardar datos");
         ES.escribirLn("");
         ES.escribirCl("0. SALIR\n", "ANSI_BLACK");
         ES.escribirCl("--------------------------------\n", "ANSI_PURPLE");
@@ -385,7 +394,7 @@ public class RLC_AlquilerVehiculos {
     
     private static Enumerados.CajaCambio cajaCambio()
     {
-        int nCamb = ES.leerEntero("Introduzca el tipo de caja der cambio:\n\t1 - Manual\n\t2 - Automatica\n", (byte) 1, (byte) 2);
+        int nCamb = ES.leerEntero("Introduzca el tipo de caja de cambio:\n\t1 - Manual\n\t2 - Automatica\n", (byte) 1, (byte) 2);
         Enumerados.CajaCambio cambio = null;
         
         switch (nCamb) 
@@ -557,6 +566,34 @@ public class RLC_AlquilerVehiculos {
             }
         }
     }
+    
+    public static boolean guardarDatos()
+    {
+        boolean exito = false;
+        
+        ES.escribirLn("Guardando informacion de los clientes.");
+        for (int i = 0; i < nClientes; i++) {
+            ES.escribirArchivo(RUTA_CLIENTES, clientes[i].escribirFichero(), (i==0?true:false));
+            ES.escribir("-");
+        }
+        ES.escribirLn("Informacion CLIENTE guardada.");
+        
+        ES.escribirLn("Guardando informacion de los vehiculos.");
+        for (int i = 0; i < nVehiculos; i++) {
+            ES.escribirArchivo(RUTA_VEHICULOS, vehiculos[i].escribirFichero(), (i==0?true:false));
+            ES.escribir("-");
+        }
+        ES.escribirLn("Informacion VEHICULOS guardada.");
+        
+        ES.escribirLn("Guardando informacion de los alquileres.");
+        for (int i = 0; i < nAlquileres; i++) {
+            ES.escribirArchivo(RUTA_ALQUILERES, alquileres[i].escribirFichero(), (i==0?true:false));
+            ES.escribir("-");
+        }
+        ES.escribirLn("Informacion ALQUILERES guardada.");
+        
+        return exito;
+    } 
     
     
 }

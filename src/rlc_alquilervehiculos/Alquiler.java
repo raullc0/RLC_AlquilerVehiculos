@@ -19,6 +19,7 @@ public class Alquiler {
     private final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private final double PRECIO_DIA = 300;
     private LocalDateTime fecha;
+    private LocalDateTime fechaFin = null;
     private int dias;
     
     private Cliente cliente;
@@ -71,6 +72,7 @@ public class Alquiler {
     {
         vehiculo.setDisponible(true);
         this.dias = getDias();
+        this.fechaFin = LocalDateTime.now();
     }
     
     @Override
@@ -80,13 +82,16 @@ public class Alquiler {
                 "\n--------------------------------" +
                 "\nCliente: " + cliente.toString() +
                 "\nTurismo: " + vehiculo.toString() + 
-                "\nDias: " + dias +
+                "\nDias: " + getDias() +
                 "\nCerrado: " + vehiculo.isDisponible() +
                 "\n--------------------------------\n"
                 );
     }
     
-    
+    public String escribirFichero()
+    {
+        return(cliente.getDni() + "#" + vehiculo.getMatricula() + "#" + fecha + "#" + fechaFin);
+    }
     
     
 }

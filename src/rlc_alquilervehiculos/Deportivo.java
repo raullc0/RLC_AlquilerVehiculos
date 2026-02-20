@@ -49,4 +49,10 @@ public class Deportivo extends Turismo
                 + "\nCaja de cambios: " + cambio +
                 "\n--------------------------------\n";
     }
+    
+    @Override
+    public String escribirFichero()
+    {
+        return("1" + "#" + super.escribirFichero() + "#" + descapotable + "#" + cambio + "\n");
+    }
 }

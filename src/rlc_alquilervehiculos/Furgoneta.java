@@ -45,4 +45,9 @@ public class Furgoneta extends Mercancias {
                 + "\nTamano: " + tamano +
                 "\n--------------------------------\n";
     }
+    
+    public String escribirFichero()
+    {
+        return("3" + "#" + super.escribirFichero() + "#" + refrigerado + "#" + tamano + "\n");
+    }
 }

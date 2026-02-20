@@ -91,4 +91,9 @@ public abstract class Vehiculo {
                 "\nDisponible: " + disponible) +
                 "\n";
     }
+    
+    public String escribirFichero()
+    {
+        return(matricula + "#" + marca + "#" + modelo + "#" + cilindrada + "#" + disponible + "#" + deBaja);
+    }
 }

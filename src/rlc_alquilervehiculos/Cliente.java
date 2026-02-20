@@ -86,4 +86,9 @@ public class Cliente {
                 "\nCodigo Postal: " + codigoPostal) +
                 "\n--------------------------------\n";
     }
+    
+    public String escribirFichero()
+    {
+        return(dni + "#" + nombre + "#" + direccion + "#" + localidad + "#" + codigoPostal + "#" + deBaja + "\n");
+    }
 }

@@ -701,8 +701,6 @@ public class ES {
             ES.escribirCl("ERROR (leerArchivo): " + e, "ANSI_RED");
         }
         
-        ES.escribir(contenido.isEmpty() + " "+ contenido.isBlank());
-        
         return contenido;
     }
     

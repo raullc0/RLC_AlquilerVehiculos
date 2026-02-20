@@ -15,7 +15,7 @@ public abstract class Turismo extends Vehiculo
     // Atributos
     
     protected int nPuertas;
-    protected Enumerados.TipoCombustible combustible; // Tipo enumerado??
+    protected Enumerados.TipoCombustible combustible;
     
     // Constructor
     Turismo(String matricula, String marca, String modelo, int cilindrada, Enumerados.TipoCombustible combustible, int nPuertas)
@@ -37,5 +37,11 @@ public abstract class Turismo extends Vehiculo
         return super.toString()
                 + "\nPuertas: " + nPuertas
                 + "\nCombustible: " + combustible;
+    }
+    
+    @Override
+    public String escribirFichero()
+    {
+        return(super.escribirFichero() + "#" + nPuertas + "#" + combustible);
     }
 }

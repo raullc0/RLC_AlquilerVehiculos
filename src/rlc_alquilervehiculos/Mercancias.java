@@ -76,4 +76,10 @@ public abstract class Mercancias extends Vehiculo
                 + "\nPeso Maximo Autorizado: " + pma
                 + "\nVolumen: " + volumen;
     }
+    
+    @Override
+    public String escribirFichero()
+    {
+        return(super.escribirFichero() + "#" + pma + "#" + volumen);
+    }
 }

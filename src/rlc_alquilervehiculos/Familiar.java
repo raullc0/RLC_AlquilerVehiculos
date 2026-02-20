@@ -70,4 +70,9 @@ public class Familiar extends Turismo {
                 + "\nNumero de plazas: " + nPlazas +
                 "\n--------------------------------\n";
     }
+    
+    public String escribirFichero()
+    {
+        return("2" + "#" + super.escribirFichero() + "#" + nPlazas + "#" + sillaBebe + "\n");
+    }
 }
