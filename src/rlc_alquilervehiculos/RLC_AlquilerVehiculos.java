@@ -5,6 +5,7 @@
 package rlc_alquilervehiculos;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import utiles.ES;
 import utiles.Utilidades;
 
@@ -493,6 +494,54 @@ public class RLC_AlquilerVehiculos {
         return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
     }
     
+    private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
+    {
+        Furgoneta furgoneta = null;
+        try 
+        {
+            int pma = Integer.parseInt(_datos[7]);
+            if (pma < 1)
+                pma = 1;
+            
+            int volumen = Integer.parseInt(_datos[8]);
+            if (volumen < 1)
+                volumen = 1;
+            
+            boolean refrigerado = Boolean.parseBoolean(_datos[9]);
+            
+            Enumerados.Tamano tamano = null;
+            boolean tamValido = false;
+            
+            
+            switch (_datos[9]) 
+            {
+                case "GRANDE":
+                    tamano = Enumerados.Tamano.GRANDE;
+                    tamValido = true;
+                    break;
+                case "MEDIANA":
+                    tamano = Enumerados.Tamano.MEDIANA;
+                    tamValido = true;
+                    break;
+                case "PEQUENA":
+                    tamano = Enumerados.Tamano.PEQUENA;
+                    tamValido = true;
+                    break;
+            }
+            
+            if (tamValido)
+            {
+                furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
+            }
+            
+            
+        }
+        catch(Exception e) {}
+
+
+        return furgoneta;
+    }
+    
     
     private static Enumerados.TipoCombustible tipoCombustible()
     {
@@ -804,11 +853,11 @@ public class RLC_AlquilerVehiculos {
                             tipoValido = true;
                             break;
                         case 2: 
-                            vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada);
+                            vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada, datos);
                             tipoValido = true;
                             break;
                         case 3: 
-                            vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada);
+                            vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada, datos);
                             tipoValido = true;
                             break;
                     }
@@ -817,10 +866,65 @@ public class RLC_AlquilerVehiculos {
                     {
                         if (vehiculo != null)
                             anadirVehiculo(vehiculo);
+                        
+                        try
+                        {
+                            boolean disponible = Boolean.parseBoolean(datos[5]);
+                            
+                            if (!disponible)
+                                vehiculos[nVehiculos - 1].setDisponible(disponible);
+                            
+                            boolean baja = Boolean.parseBoolean(datos[6]);
+                            
+                            if (!baja)
+                                vehiculos[nVehiculos - 1].darDeBaja();
+                            
+                        }
+                        catch(Exception e){}
                     }
                 }
             } catch (NumberFormatException e){}
   
+        }
+    }
+    
+    public static void crearAlquilerConDatos(String _cadena)
+    {
+        String [] datos = _cadena.split("#");
+        
+        if (Utilidades.comprobarDni(datos[0]) == true)
+        {
+            String dni = datos[0];
+            dni = dni.toUpperCase();
+            
+            if(Utilidades.comprobarMatricula(datos[1]) == true)
+            {
+                String matricula = datos[1];
+                matricula = matricula.toUpperCase();
+                
+                try 
+                {
+                    
+                    if (nAlquileres < MAX_ALQUILERES) 
+                    {
+                        try 
+                        {
+                            LocalDateTime fecha = LocalDateTime.parse(datos[2]);
+                            LocalDateTime fechaFin = null;
+                            if (datos[3] != "0")
+                                fechaFin = LocalDateTime.parse(datos[3]);
+                                
+                            alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
+                            nAlquileres++;
+                        }
+                        catch(Exception e){}
+                    }
+                    else
+                        ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
+                    
+                }
+                catch(Exception e){}
+            }
         }
     }
     

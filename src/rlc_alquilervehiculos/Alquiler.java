@@ -37,6 +37,17 @@ public class Alquiler {
         vehiculo.setDisponible(false);
     }
     
+    Alquiler(Cliente cliente, Vehiculo vehiculo, LocalDateTime fecha, LocalDateTime fechaFin) 
+    {
+        this.cliente = cliente;
+        this.vehiculo = vehiculo;
+        this.fecha = fecha;
+        this.fechaFin = fechaFin;
+        
+        
+        this.dias = getDias();
+    }
+    
     // Metodos
     
     public Cliente getCliente()
