@@ -769,26 +769,39 @@ public class RLC_AlquilerVehiculos {
         try 
         {
             String cadenaClientes = ES.leerArchivo(RUTA_CLIENTES);
-            String [] datosClientes = cadenaClientes.split("\n");
             
-            for (int i = 0; i < datosClientes.length; i++) {
-                crearClienteConDatos(datosClientes[i]);
+            if (cadenaClientes != null) 
+            {
+                String [] datosClientes = cadenaClientes.split("\n");
+            
+                for (int i = 0; i < datosClientes.length; i++) {
+                    crearClienteConDatos(datosClientes[i]);
+                }
             }
+            
             
             String cadenaVehiculos = ES.leerArchivo(RUTA_VEHICULOS);
-            String [] datosVehiculos = cadenaVehiculos.split("\n");
+            if (cadenaVehiculos != null)
+            {
+                String [] datosVehiculos = cadenaVehiculos.split("\n");
             
-            for (int i = 0; i < datosVehiculos.length; i++) {
-                crearVehiculoConDatos(datosVehiculos[i]);
+                for (int i = 0; i < datosVehiculos.length; i++) {
+                    crearVehiculoConDatos(datosVehiculos[i]);
+                }
             }
+            
             
             String cadenaAlquileres = ES.leerArchivo(RUTA_ALQUILERES);
-            String [] datosAlquileres = cadenaAlquileres.split("\n");
+            if (cadenaAlquileres != null && cadenaClientes != null && cadenaVehiculos !=null)
+            {
+                String [] datosAlquileres = cadenaAlquileres.split("\n");
             
-            for (int i = 0; i < datosAlquileres.length; i++) {
-                crearAlquilerConDatos(datosAlquileres[i]);
+                for (int i = 0; i < datosAlquileres.length; i++) {
+                    crearAlquilerConDatos(datosAlquileres[i]);
                 
+                }
             }
+            
             
         }
         catch (Exception e)
