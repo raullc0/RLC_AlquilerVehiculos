@@ -782,6 +782,14 @@ public class RLC_AlquilerVehiculos {
                 crearVehiculoConDatos(datosVehiculos[i]);
             }
             
+            String cadenaAlquileres = ES.leerArchivo(RUTA_ALQUILERES);
+            String [] datosAlquileres = cadenaAlquileres.split("\n");
+            
+            for (int i = 0; i < datosAlquileres.length; i++) {
+                crearAlquilerConDatos(datosAlquileres[i]);
+                
+            }
+            
         }
         catch (Exception e)
         {
