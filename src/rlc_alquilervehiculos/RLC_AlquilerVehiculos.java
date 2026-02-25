@@ -4,6 +4,7 @@
  */
 package rlc_alquilervehiculos;
 
+import java.io.IOException;
 import utiles.ES;
 import utiles.Utilidades;
 
@@ -49,8 +50,9 @@ public class RLC_AlquilerVehiculos {
         alquileres = new Alquiler[MAX_ALQUILERES];
         
         // Logica del programa
-        int opcionMenu = 0;
+        int opcionMenu;
         String dni, matricula;
+        leerDatos();
         
         do 
         {
@@ -58,7 +60,8 @@ public class RLC_AlquilerVehiculos {
             {
                 new ProcessBuilder("cmd", "/C", "cls").inheritIO().start().waitFor();
             }
-            catch (Exception e) {}
+            catch (IOException | InterruptedException e) {}
+            
             menu();
             opcionMenu = ES.leerEntero();
             
@@ -344,6 +347,70 @@ public class RLC_AlquilerVehiculos {
         return new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
     
+    private static Deportivo datosDeportivo(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
+    {
+        Deportivo deportivo = null;
+        try
+        {
+            int nPuertas = Integer.parseInt(_datos[7]);
+            
+            Enumerados.TipoCombustible combustible = null;
+            boolean combValido = false;
+            
+            switch (_datos[8]) 
+            {
+                case "GASOLINA": 
+                    combustible = Enumerados.TipoCombustible.GASOLINA;
+                    combValido = true;
+                    break;
+                case "DIESEL":
+                    combustible = Enumerados.TipoCombustible.DIESEL;
+                    combValido = true;
+                    break;
+                case "HIBRIDO":
+                    combustible = Enumerados.TipoCombustible.HIBRIDO;
+                    combValido = true;
+                    break;
+                case "ELECTRICO":
+                    combustible = Enumerados.TipoCombustible.ELECTRICO;
+                    combValido = true;
+                    break;
+            }
+            
+            if (combValido) 
+            {
+                try 
+                {
+                    boolean descapotable = Boolean.parseBoolean(_datos[9]);
+                    Enumerados.CajaCambio cambio = null;
+                    boolean cambValido = false;
+                    
+                    switch (_datos[10]) 
+                    {
+                        case "MANUAL":
+                            cambio = Enumerados.CajaCambio.MANUAL;
+                            cambValido = true;
+                            break;
+                        case "AUTOMATICA":
+                            cambio = Enumerados.CajaCambio.AUTOMATICA;
+                            cambValido = true;
+                            break;
+                    }
+                    
+                    if (cambValido)
+                    {
+                        deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+                    }
+                }
+                catch (Exception e){}
+            }
+        }
+        catch(Exception e) {}
+        
+
+        return deportivo;
+    }
+    
     
     private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada)
     {
@@ -356,6 +423,59 @@ public class RLC_AlquilerVehiculos {
         Enumerados.TipoCombustible combustible = tipoCombustible();
 
         return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+    }
+    
+    private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
+    {
+        
+        Familiar familiar = null;
+        try
+        {
+            int nPuertas = Integer.parseInt(_datos[7]);
+            
+            Enumerados.TipoCombustible combustible = null;
+            boolean combValido = false;
+            
+            switch (_datos[8]) 
+            {
+                case "GASOLINA": 
+                    combustible = Enumerados.TipoCombustible.GASOLINA;
+                    combValido = true;
+                    break;
+                case "DIESEL":
+                    combustible = Enumerados.TipoCombustible.DIESEL;
+                    combValido = true;
+                    break;
+                case "HIBRIDO":
+                    combustible = Enumerados.TipoCombustible.HIBRIDO;
+                    combValido = true;
+                    break;
+                case "ELECTRICO":
+                    combustible = Enumerados.TipoCombustible.ELECTRICO;
+                    combValido = true;
+                    break;
+            }
+            
+            if (combValido) 
+            {
+                try 
+                {
+                    int nPlazas = Integer.parseInt(_datos[9]);
+                    
+                    if (nPlazas < 4)
+                        nPlazas = 4;
+                    if (nPlazas > 7)
+                        nPlazas = 7;
+                    boolean sillaBebe = Boolean.parseBoolean(_datos[10]);
+                    
+                    familiar = new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+                }
+                catch (Exception e){}
+            }
+        }
+        catch(Exception e) {}
+        
+        return familiar;
     }
     
     
@@ -381,18 +501,10 @@ public class RLC_AlquilerVehiculos {
         
         switch (nComb) 
         {
-            case 1:
-                combustible = Enumerados.TipoCombustible.GASOLINA;
-                break;
-            case 2:
-                combustible = Enumerados.TipoCombustible.DIESEL;
-                break;
-            case 3:
-                combustible = Enumerados.TipoCombustible.HIBRIDO;
-                break;
-            case 4:
-                combustible = Enumerados.TipoCombustible.ELECTRICO;
-                break;
+            case 1 -> combustible = Enumerados.TipoCombustible.GASOLINA;
+            case 2 -> combustible = Enumerados.TipoCombustible.DIESEL;
+            case 3 -> combustible = Enumerados.TipoCombustible.HIBRIDO;
+            case 4 -> combustible = Enumerados.TipoCombustible.ELECTRICO;
         }
         
         return combustible;
@@ -406,12 +518,8 @@ public class RLC_AlquilerVehiculos {
         
         switch (nCamb) 
         {
-            case 1:
-                cambio = Enumerados.CajaCambio.MANUAL;
-                break;
-            case 2:
-                cambio = Enumerados.CajaCambio.AUTOMATICA;
-                break;
+            case 1 -> cambio = Enumerados.CajaCambio.MANUAL;
+            case 2 -> cambio = Enumerados.CajaCambio.AUTOMATICA;
         }
         
         return cambio;
@@ -425,15 +533,9 @@ public class RLC_AlquilerVehiculos {
         
         switch (nTam) 
         {
-            case 1:
-                tamano = Enumerados.Tamano.GRANDE;
-                break;
-            case 2:
-                tamano = Enumerados.Tamano.MEDIANA;
-                break;
-            case 3:
-                tamano = Enumerados.Tamano.PEQUENA;
-                break;
+            case 1 -> tamano = Enumerados.Tamano.GRANDE;
+            case 2 -> tamano = Enumerados.Tamano.MEDIANA;
+            case 3 -> tamano = Enumerados.Tamano.PEQUENA;
         }
         
         return tamano;
@@ -578,29 +680,150 @@ public class RLC_AlquilerVehiculos {
     {
         boolean exito = false;
         
-        ES.escribirLn("Guardando informacion de los clientes.");
-        for (int i = 0; i < nClientes; i++) {
-            ES.escribirArchivo(RUTA_CLIENTES, clientes[i].escribirFichero(), (i==0?true:false));
-            ES.escribir("-");
+        try {
+            ES.escribirLn("Guardando informacion de los clientes.");
+            for (int i = 0; i < nClientes; i++) {
+                ES.escribirArchivo(RUTA_CLIENTES, clientes[i].escribirFichero(), (i==0));
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion CLIENTE guardada.");
+
+            ES.escribirLn("Guardando informacion de los vehiculos.");
+            for (int i = 0; i < nVehiculos; i++) {
+                ES.escribirArchivo(RUTA_VEHICULOS, vehiculos[i].escribirFichero(), (i==0));
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion VEHICULOS guardada.");
+
+            ES.escribirLn("Guardando informacion de los alquileres.");
+            for (int i = 0; i < nAlquileres; i++) {
+                ES.escribirArchivo(RUTA_ALQUILERES, alquileres[i].escribirFichero(), (i==0));
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion ALQUILERES guardada.");
+            
+            exito = true;
         }
-        ES.escribirLn("Informacion CLIENTE guardada.");
-        
-        ES.escribirLn("Guardando informacion de los vehiculos.");
-        for (int i = 0; i < nVehiculos; i++) {
-            ES.escribirArchivo(RUTA_VEHICULOS, vehiculos[i].escribirFichero(), (i==0?true:false));
-            ES.escribir("-");
+        catch(Exception e) 
+        {
+            ES.escribirCl("Error al guardar los datos: " + e + "\n", "ANSI_RED");
         }
-        ES.escribirLn("Informacion VEHICULOS guardada.");
-        
-        ES.escribirLn("Guardando informacion de los alquileres.");
-        for (int i = 0; i < nAlquileres; i++) {
-            ES.escribirArchivo(RUTA_ALQUILERES, alquileres[i].escribirFichero(), (i==0?true:false));
-            ES.escribir("-");
-        }
-        ES.escribirLn("Informacion ALQUILERES guardada.");
         
         return exito;
     } 
+    
+    public static boolean leerDatos()
+    {
+        boolean exito = false;
+        
+        ES.escribirLn("\nLeyendo datos...");
+        try 
+        {
+            String cadenaClientes = ES.leerArchivo(RUTA_CLIENTES);
+            String [] datosClientes = cadenaClientes.split("\n");
+            
+            for (int i = 0; i < datosClientes.length; i++) {
+                crearClienteConDatos(datosClientes[i]);
+            }
+            
+            String cadenaVehiculos = ES.leerArchivo(RUTA_VEHICULOS);
+            String [] datosVehiculos = cadenaVehiculos.split("\n");
+            
+            for (int i = 0; i < datosVehiculos.length; i++) {
+                crearVehiculoConDatos(datosVehiculos[i]);
+            }
+            
+        }
+        catch (Exception e)
+        {
+            ES.escribirCl("Error al leer los datos: " + e + "\n", "ANSI_RED");
+        }
+        
+        return exito;
+    }
+    
+    public static void crearClienteConDatos(String _cadena)
+    {
+        String [] datos = _cadena.split("#");
+        
+        if (Utilidades.comprobarDni(datos[0]) == true)
+        {
+            String dni = datos[0];
+            dni = ES.toUpperCase(dni);
+            
+            String nombre = datos[1];
+            String direccion = datos[2];
+            String localidad = datos[3];
+
+            
+            if (Utilidades.comprobarCodigoPostal(datos[4]) == true)
+            {
+                String codigoPostal = datos[4];
+                
+                Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
+                
+                anadirCliente(cliente);
+            }
+            else
+                ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
+            
+            
+        }
+        else
+            ES.escribirCl("Error: DNI no valido\n", "ANSI_RED");
+    }
+    
+    public static void crearVehiculoConDatos(String _cadena) 
+    {
+        String [] datos = _cadena.split("#");
+        
+        
+        if (Utilidades.comprobarMatricula(datos[1]) == true)
+        {
+            String matricula = datos[1];
+            matricula = ES.toUpperCase(matricula);
+            
+            
+            String marca = datos[2];
+            String modelo = datos[3];
+            
+            try
+            {
+                if(Integer.parseInt(datos[4]) >= 1)
+                {
+                    int cilindrada = Integer.parseInt(datos[4]);
+                    
+                    int tipoVehiculo;
+                    boolean tipoValido = false;
+                    Vehiculo vehiculo = null;
+                    
+                    switch (Integer.parseInt(datos[0]))
+                    {
+                        case 1: 
+                            vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada, datos);
+                            tipoValido = true;
+                            break;
+                        case 2: 
+                            vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada);
+                            tipoValido = true;
+                            break;
+                        case 3: 
+                            vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada);
+                            tipoValido = true;
+                            break;
+                    }
+                    
+                    if(tipoValido) // CREACION DEL VEHICULO
+                    {
+                        if (vehiculo != null)
+                            anadirVehiculo(vehiculo);
+                    }
+                }
+            } catch (NumberFormatException e){}
+  
+        }
+    }
+    
     
     
 }

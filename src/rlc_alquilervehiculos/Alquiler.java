@@ -33,6 +33,7 @@ public class Alquiler {
         this.vehiculo = vehiculo;
         this.fecha = LocalDateTime.now();
         this.dias = 0;
+        this.fechaFin = null;
         vehiculo.setDisponible(false);
     }
     
@@ -55,7 +56,13 @@ public class Alquiler {
     
     public int getDias() 
     {
-        return diferenciaDias(fecha);
+        int gDias;
+        if (fechaFin == null)
+            gDias = diferenciaDiasHoy(fecha);
+        else
+            gDias = diferenciaDias(fecha);
+        
+        return gDias;
     }
     
     public double precioAlquiler()
@@ -63,9 +70,14 @@ public class Alquiler {
         return PRECIO_DIA * getDias() + vehiculo.getCilindrada() / 100;
     }
     
-    private int diferenciaDias(LocalDateTime fecha) 
+    private int diferenciaDiasHoy(LocalDateTime fecha) 
     {
         return (int)ChronoUnit.DAYS.between(LocalDateTime.now(), fecha);
+    }
+    
+    private int diferenciaDias(LocalDateTime fecha) 
+    {
+        return (int)ChronoUnit.DAYS.between(fechaFin, fecha);
     }
     
     public void cerrar() 
@@ -84,6 +96,7 @@ public class Alquiler {
                 "\nTurismo: " + vehiculo.toString() + 
                 "\nDias: " + getDias() +
                 "\nCerrado: " + vehiculo.isDisponible() +
+                "\nFecha finalizacion: " + fechaFin +
                 "\n--------------------------------\n"
                 );
     }

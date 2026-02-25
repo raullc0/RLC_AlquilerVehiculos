@@ -209,6 +209,8 @@ public class ES {
         String cadena = "";
 
         cadena = s.nextLine();
+        
+        cadena = cadena.replace('#', ' ');
 
         return cadena;
     }
@@ -223,6 +225,7 @@ public class ES {
         System.out.print(_msg);
 
         cadena = s.nextLine();
+        cadena = cadena.replace('#', ' ');
 
         return cadena;
     }
@@ -242,6 +245,7 @@ public class ES {
             try {
                 System.out.print(_msg);
                 cadena = s.nextLine();
+                cadena = cadena.replace('#', ' ');
 
                 if (cadena.length() == _longitud) {
                     datoValido = true;
@@ -269,6 +273,7 @@ public class ES {
         do {
             try {
                 cadena = s.nextLine();
+                cadena = cadena.replace('#', ' ');
 
                 if (cadena.length() == 1) {
                     datoValido = true;
@@ -298,6 +303,7 @@ public class ES {
             try {
                 System.out.print(_msg);
                 cadena = s.nextLine();
+                cadena = cadena.replace('#', ' ');
 
                 if (cadena.length() == 1) {
                     datoValido = true;
