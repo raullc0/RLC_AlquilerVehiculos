@@ -4,8 +4,10 @@
  */
 package rlc_alquilervehiculos;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import utiles.ES;
 import utiles.Utilidades;
 
@@ -22,9 +24,10 @@ public class RLC_AlquilerVehiculos {
         se debe establecer un limite alto si se 
         quieren cambiar datos con fecuencia
     */
-    public static final String RUTA_CLIENTES = "datos\\clientes_RLC.txt";
-    public static final String RUTA_VEHICULOS = "datos\\vehiculos_RLC.txt";
-    public static final String RUTA_ALQUILERES = "datos\\alquileres_RLC.txt";
+    public static final String RUTA_CLIENTES = "datos\\clientes_RLC.dat";
+    public static final String RUTA_VEHICULOS = "datos\\vehiculos_RLC.dat";
+    public static final String RUTA_ALQUILERES = "datos\\alquileres_RLC.dat";
+    public static final String RUTA_BACKUPS = "backups\\";
     
     private static final int MAX_CLIENTES = 50;
     private static final int MAX_VEHICULOS = 50; 
@@ -53,7 +56,7 @@ public class RLC_AlquilerVehiculos {
         // Logica del programa
         int opcionMenu;
         String dni, matricula;
-        leerDatos();
+        leerDatos(RUTA_CLIENTES, RUTA_VEHICULOS, RUTA_ALQUILERES);
         
         do 
         {
@@ -74,13 +77,13 @@ public class RLC_AlquilerVehiculos {
                     
                     if (respuesta == false)
                         opcionMenu = -1;
-                    
-                    ES.escribirCl("Desea guardar los datos?\nSi / No\n", "ANSI_GREEN");
-                    boolean guardar = ES.siono();
-                    
-                    if(guardar)
-                        guardarDatos();
-                    
+                    else {
+                        ES.escribirCl("Desea guardar los datos?\nSi / No\n", "ANSI_GREEN");
+                        boolean guardar = ES.siono();
+
+                        if(guardar)
+                            guardarDatos(RUTA_CLIENTES, RUTA_VEHICULOS, RUTA_ALQUILERES);
+                    }
                     break;
                 case 1:
                     anadirCliente(pedirDatosCliente());
@@ -114,6 +117,8 @@ public class RLC_AlquilerVehiculos {
                     dni = pedirDNI();
                     matricula = pedirMatricula();
                     
+                    // En el caso de no existir ningun cliente o vehiculo, escribir un dato incorrecto saltara el proceso
+                    
                     if (getCliente(dni) != null)
                     {
                         if (getVehiculo(matricula) != null)
@@ -130,6 +135,8 @@ public class RLC_AlquilerVehiculos {
                 case 10:
                     dni = pedirDNI();
                     matricula = pedirMatricula();
+                    
+                    // En el caso de no existir ningun cliente o vehiculo, escribir un dato incorrecto saltara el proceso
                     
                     if (getCliente(dni) != null)
                     {
@@ -149,7 +156,13 @@ public class RLC_AlquilerVehiculos {
                     ES.simularPausa();
                     break;
                 case 12:
-                    guardarDatos();
+                    guardarDatos(RUTA_CLIENTES, RUTA_VEHICULOS, RUTA_ALQUILERES);
+                    break;
+                case 13:
+                    crearCopiaDeSeguridad();
+                    break;
+                case 14:
+                    recuperarCopiaDeSeguridad();
                     break;
             }
         }
@@ -178,6 +191,8 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("");
         ES.escribirLn("\t12. Guardar datos");
         ES.escribirLn("");
+        ES.escribirLn("\t13. Realizar copia de seguridad");
+        ES.escribirLn("\t14. Recuperar copia de seguridad");
         ES.escribirCl("0. SALIR\n", "ANSI_BLACK");
         ES.escribirCl("--------------------------------\n", "ANSI_PURPLE");
         ES.escribirCl("Escriba la opcion: ", "ANSI_CYAN");
@@ -233,16 +248,19 @@ public class RLC_AlquilerVehiculos {
         boolean encontrado = false;
         Cliente cliente = null;
         
-        for( int i = 0; i < nClientes && !encontrado; i++)
+        if(_dni != null)
         {
-            if(clientes[i] != null)
+            for( int i = 0; i < nClientes && !encontrado; i++)
             {
-                if(clientes[i].getDni().equals(_dni)) 
+                if(clientes[i] != null)
                 {
-                    encontrado = true;
-                    cliente = clientes[i];
-                }
-            }  
+                    if(clientes[i].getDni().equals(_dni)) 
+                    {
+                        encontrado = true;
+                        cliente = clientes[i];
+                    }
+                }  
+            }
         }
         
         return cliente;
@@ -612,12 +630,15 @@ public class RLC_AlquilerVehiculos {
         boolean encontrado = false;
         Vehiculo vehiculo = null;
         
-        for( int i = 0; i < nVehiculos && !encontrado; i++)
+        if (_matricula != null)
         {
-            if(vehiculos[i].getMatricula().equals(_matricula)) 
+            for( int i = 0; i < nVehiculos && !encontrado; i++)
             {
-                encontrado = true;
-                vehiculo = vehiculos[i];
+                if(vehiculos[i].getMatricula().equals(_matricula)) 
+                {
+                    encontrado = true;
+                    vehiculo = vehiculos[i];
+                }
             }
         }
         
@@ -725,28 +746,28 @@ public class RLC_AlquilerVehiculos {
         }
     }
     
-    public static boolean guardarDatos()
+    public static boolean guardarDatos(String _rutaCli, String _rutaVeh, String _rutaAlq)
     {
         boolean exito = false;
         
         try {
             ES.escribirLn("Guardando informacion de los clientes.");
             for (int i = 0; i < nClientes; i++) {
-                ES.escribirArchivo(RUTA_CLIENTES, clientes[i].escribirFichero(), (i==0));
+                ES.escribirArchivo(_rutaCli, clientes[i].escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion CLIENTE guardada.");
 
             ES.escribirLn("Guardando informacion de los vehiculos.");
             for (int i = 0; i < nVehiculos; i++) {
-                ES.escribirArchivo(RUTA_VEHICULOS, vehiculos[i].escribirFichero(), (i==0));
+                ES.escribirArchivo(_rutaVeh, vehiculos[i].escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion VEHICULOS guardada.");
 
             ES.escribirLn("Guardando informacion de los alquileres.");
             for (int i = 0; i < nAlquileres; i++) {
-                ES.escribirArchivo(RUTA_ALQUILERES, alquileres[i].escribirFichero(), (i==0));
+                ES.escribirArchivo(_rutaAlq, alquileres[i].escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion ALQUILERES guardada.");
@@ -761,14 +782,14 @@ public class RLC_AlquilerVehiculos {
         return exito;
     } 
     
-    public static boolean leerDatos()
+    public static boolean leerDatos(String _rutaCli, String _rutaVeh, String _rutaAlq)
     {
         boolean exito = false;
         
         ES.escribirLn("\nLeyendo datos...");
         try 
         {
-            String cadenaClientes = ES.leerArchivo(RUTA_CLIENTES);
+            String cadenaClientes = ES.leerArchivo(_rutaCli);
             
             if (cadenaClientes != null) 
             {
@@ -780,7 +801,7 @@ public class RLC_AlquilerVehiculos {
             }
             
             
-            String cadenaVehiculos = ES.leerArchivo(RUTA_VEHICULOS);
+            String cadenaVehiculos = ES.leerArchivo(_rutaVeh);
             if (cadenaVehiculos != null)
             {
                 String [] datosVehiculos = cadenaVehiculos.split("\n");
@@ -791,7 +812,7 @@ public class RLC_AlquilerVehiculos {
             }
             
             
-            String cadenaAlquileres = ES.leerArchivo(RUTA_ALQUILERES);
+            String cadenaAlquileres = ES.leerArchivo(_rutaVeh);
             if (cadenaAlquileres != null && cadenaClientes != null && cadenaVehiculos !=null)
             {
                 String [] datosAlquileres = cadenaAlquileres.split("\n");
@@ -932,7 +953,7 @@ public class RLC_AlquilerVehiculos {
                         {
                             LocalDateTime fecha = LocalDateTime.parse(datos[2]);
                             LocalDateTime fechaFin = null;
-                            if (datos[3] != "0")
+                            if (!"0".equals(datos[3]))
                                 fechaFin = LocalDateTime.parse(datos[3]);
                                 
                             alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
@@ -949,6 +970,90 @@ public class RLC_AlquilerVehiculos {
         }
     }
     
+    public static void crearCopiaDeSeguridad() {
+        // Definimos un formato seguro para archivos (sin ":" ni "/")
+        DateTimeFormatter formatoSeguro = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String fechaTexto = LocalDateTime.now().format(formatoSeguro);
+
+        String directorio = RUTA_BACKUPS + fechaTexto;
+        crearDirectorio(directorio);
+
+        guardarDatos(directorio + "\\clientes_RLC.dat" , directorio + "\\vehiculos_RLC.dat", directorio + "\\alquileres_RLC.dat");
     
+    }
+
+    public static void crearDirectorio(String _directorio) {
+        try {
+            File directorio = new File(_directorio);
+            // .mkdirs() crea carpetas de forma recursiva si los padres no existen
+            if (directorio.mkdirs()) {
+                ES.escribirLn("Copia de seguridad: " + _directorio + " creada");
+            } else if (directorio.exists()) {
+                ES.escribirLn("El directorio ya existe.");
+            } else {
+                System.err.println("No se pudo crear el directorio.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+    
+    public static void recuperarCopiaDeSeguridad()
+    {
+        File [] copias = listarCopiasDeSeguridad();
+        
+        if (copias == null || copias.length == 0) {
+            System.out.println("No hay copias de seguridad disponibles.");
+            return;
+        }
+        
+        // DELICADO: LIMPIAR DATOS ANTES DE CARGAR
+        
+        vehiculos = null;
+        clientes = null;
+        alquileres = null;
+        
+        vehiculos = new Vehiculo[MAX_VEHICULOS];
+        clientes = new Cliente[MAX_CLIENTES];
+        alquileres = new Alquiler[MAX_ALQUILERES];
+        
+        nVehiculos = 0;
+        nClientes = 0;
+        nAlquileres = 0;
+        
+        // El rango es de 1 hasta el total de copias
+        int opcion = ES.leerEntero("Elija el numero de copia: ", 1, copias.length);
+
+        File copiaSeleccionada = copias[opcion - 1];
+        
+        leerDatos(copiaSeleccionada.getPath() + "\\clientes_RLC.dat", copiaSeleccionada.getPath() + "\\vehiculos_RLC.dat", copiaSeleccionada.getPath() + "\\alquileres_RLC.dat");
+    }
+    
+    public static File[] listarCopiasDeSeguridad() {
+        File carpetaPadre = new File(RUTA_BACKUPS);
+
+        File[] copias = null;
+        // Verificamos si la ruta existe y es un directorio
+        if (carpetaPadre.exists() && carpetaPadre.isDirectory()) {
+
+            // Filtramos para obtener solo los directorios
+            copias = carpetaPadre.listFiles(File::isDirectory);
+
+            if (copias != null && copias.length > 0) {
+                ES.escribirLn("--- Lista de Copias de Seguridad ---");
+                int contador = 1;
+                for (File copia : copias) {
+                    System.out.println(contador + ".- " + copia.getName());
+                    contador++;
+                }
+            } else {
+                ES.escribirLn("No se encontraron copias de seguridad.");
+            }
+        } else {
+            System.err.println("La ruta de backups no es válida o no existe.");
+        }
+        
+        return copias;
+    }
     
 }

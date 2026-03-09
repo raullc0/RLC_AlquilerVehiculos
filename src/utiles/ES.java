@@ -250,7 +250,7 @@ public class ES {
                 if (cadena.length() == _longitud) {
                     datoValido = true;
                 } else {
-                    System.out.printf("Debe ser una cadena de longitud " + _longitud);
+                    System.out.println("Debe ser una cadena de longitud " + _longitud);
                 }
             } catch (Exception e) {
                 System.out.println("El dato introducido no es correcto.");
@@ -407,6 +407,37 @@ public class ES {
      * @return Devuleve el valor del int
      */
     public static int leerEntero(String _msg, byte _min, byte _max) {
+
+        boolean datoValido = false;
+
+        int num = 0;
+        do {
+            try {
+                System.out.print(_msg);
+                num = Integer.parseInt(s.nextLine());
+
+                if (num >= _min && num <= _max) {
+                    datoValido = true;
+                } else {
+                    System.out.println("Debe ser un número entre " + _min + " y " + _max);
+                }
+            } catch (Exception e) {
+                System.out.println("El dato introducido no es correcto.");
+                System.out.println("Por favor, introduzca un valor correcto.");
+            }
+        } while (!datoValido);
+
+        return num;
+    }
+    
+    /**
+     * Metodo: leerEntero(String _msg, int _min, int _max): int Lee un int (con un minimo y maximo especificados) y escribe un mensaje.
+     * @param _msg Mensaje a escribir
+     * @param _min Minimo valor del int
+     * @param _max Maximo valor del int
+     * @return Devuleve el valor del int
+     */
+    public static int leerEntero(String _msg, int _min, int _max) {
 
         boolean datoValido = false;
 
@@ -704,6 +735,8 @@ public class ES {
             if (!contenido.isEmpty())
                 ES.escribirLn("Leyendo el contenido del fichero...");
         } catch (IOException e) {
+            ES.escribirLn("No se ha encontrado el archivo " + ruta);
+        } catch (Exception e) {
             ES.escribirCl("ERROR (leerArchivo): " + e, "ANSI_RED");
         }
         
