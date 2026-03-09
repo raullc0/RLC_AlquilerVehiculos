@@ -53,6 +53,15 @@ public class Deportivo extends Turismo
     @Override
     public String escribirFichero()
     {
+        int nCamb = 0;
+        if (cambio == Enumerados.CajaCambio.MANUAL)
+        {
+            nCamb = 1;
+        }
+        else 
+        {
+            nCamb = 2;
+        }
         return("1" + "#" + super.escribirFichero() + "#" + descapotable + "#" + cambio + "\n");
     }
 }

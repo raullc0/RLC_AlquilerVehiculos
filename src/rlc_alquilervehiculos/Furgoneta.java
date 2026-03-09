@@ -48,6 +48,22 @@ public class Furgoneta extends Mercancias {
     
     public String escribirFichero()
     {
+        int nTam = 0;
+        if (tamano == Enumerados.Tamano.GRANDE)
+        {
+            nTam = 1;
+        }
+        else 
+        {
+            if (tamano == Enumerados.Tamano.MEDIANA)
+            {
+                nTam = 2;
+            }
+            else
+            {
+                nTam = 3;
+            }
+        }
         return("3" + "#" + super.escribirFichero() + "#" + refrigerado + "#" + tamano + "\n");
     }
 }

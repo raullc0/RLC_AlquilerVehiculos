@@ -376,22 +376,29 @@ public class RLC_AlquilerVehiculos {
             Enumerados.TipoCombustible combustible = null;
             boolean combValido = false;
             
-            switch (_datos[8]) 
+            int nComb = Integer.parseInt(_datos[8]);
+            combustible = Enumerados.TipoCombustible.valueOf( _datos[8]);
+            
+            switch (nComb) 
             {
-                case "GASOLINA": 
+                case 1: 
                     combustible = Enumerados.TipoCombustible.GASOLINA;
                     combValido = true;
                     break;
-                case "DIESEL":
+                case 2:
                     combustible = Enumerados.TipoCombustible.DIESEL;
                     combValido = true;
                     break;
-                case "HIBRIDO":
+                case 3:
                     combustible = Enumerados.TipoCombustible.HIBRIDO;
                     combValido = true;
                     break;
-                case "ELECTRICO":
+                case 4:
                     combustible = Enumerados.TipoCombustible.ELECTRICO;
+                    combValido = true;
+                    break;
+                default:
+                    combustible = Enumerados.TipoCombustible.GASOLINA;
                     combValido = true;
                     break;
             }
@@ -404,14 +411,19 @@ public class RLC_AlquilerVehiculos {
                     Enumerados.CajaCambio cambio = null;
                     boolean cambValido = false;
                     
-                    switch (_datos[10]) 
+                    int nCamb = Integer.parseInt(_datos[10]);
+                    switch (nCamb) 
                     {
-                        case "MANUAL":
+                        case 1:
                             cambio = Enumerados.CajaCambio.MANUAL;
                             cambValido = true;
                             break;
-                        case "AUTOMATICA":
+                        case 2:
                             cambio = Enumerados.CajaCambio.AUTOMATICA;
+                            cambValido = true;
+                            break;
+                        default:
+                            cambio = Enumerados.CajaCambio.MANUAL;
                             cambValido = true;
                             break;
                     }
@@ -455,22 +467,28 @@ public class RLC_AlquilerVehiculos {
             Enumerados.TipoCombustible combustible = null;
             boolean combValido = false;
             
-            switch (_datos[8]) 
+            int nComb = Integer.parseInt(_datos[8]);
+            
+            switch (nComb) 
             {
-                case "GASOLINA": 
+                case 1: 
                     combustible = Enumerados.TipoCombustible.GASOLINA;
                     combValido = true;
                     break;
-                case "DIESEL":
+                case 2:
                     combustible = Enumerados.TipoCombustible.DIESEL;
                     combValido = true;
                     break;
-                case "HIBRIDO":
+                case 3:
                     combustible = Enumerados.TipoCombustible.HIBRIDO;
                     combValido = true;
                     break;
-                case "ELECTRICO":
+                case 4:
                     combustible = Enumerados.TipoCombustible.ELECTRICO;
+                    combValido = true;
+                    break;
+                default:
+                    combustible = Enumerados.TipoCombustible.GASOLINA;
                     combValido = true;
                     break;
             }
@@ -528,29 +546,10 @@ public class RLC_AlquilerVehiculos {
             boolean refrigerado = Boolean.parseBoolean(_datos[9]);
             
             Enumerados.Tamano tamano = null;
-            boolean tamValido = false;
+            tamano = Enumerados.Tamano.valueOf(_datos[10]);
             
+            furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
             
-            switch (_datos[9]) 
-            {
-                case "GRANDE":
-                    tamano = Enumerados.Tamano.GRANDE;
-                    tamValido = true;
-                    break;
-                case "MEDIANA":
-                    tamano = Enumerados.Tamano.MEDIANA;
-                    tamValido = true;
-                    break;
-                case "PEQUENA":
-                    tamano = Enumerados.Tamano.PEQUENA;
-                    tamValido = true;
-                    break;
-            }
-            
-            if (tamValido)
-            {
-                furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
-            }
             
             
         }
@@ -884,11 +883,11 @@ public class RLC_AlquilerVehiculos {
                 {
                     int cilindrada = Integer.parseInt(datos[4]);
                     
-                    int tipoVehiculo;
+                    int tipoVehiculo = Integer.parseInt(datos[0]);
                     boolean tipoValido = false;
                     Vehiculo vehiculo = null;
                     
-                    switch (Integer.parseInt(datos[0]))
+                    switch (tipoVehiculo)
                     {
                         case 1: 
                             vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada, datos);
