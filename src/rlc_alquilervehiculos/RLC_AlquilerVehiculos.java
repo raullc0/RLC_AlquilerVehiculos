@@ -812,7 +812,7 @@ public class RLC_AlquilerVehiculos {
             }
             
             
-            String cadenaAlquileres = ES.leerArchivo(_rutaVeh);
+            String cadenaAlquileres = ES.leerArchivo(_rutaAlq);
             if (cadenaAlquileres != null && cadenaClientes != null && cadenaVehiculos !=null)
             {
                 String [] datosAlquileres = cadenaAlquileres.split("\n");
