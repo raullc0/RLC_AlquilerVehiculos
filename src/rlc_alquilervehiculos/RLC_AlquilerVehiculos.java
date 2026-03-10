@@ -373,68 +373,17 @@ public class RLC_AlquilerVehiculos {
         {
             int nPuertas = Integer.parseInt(_datos[7]);
             
-            Enumerados.TipoCombustible combustible = null;
-            boolean combValido = false;
+            Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
             
-            int nComb = Integer.parseInt(_datos[8]);
-            combustible = Enumerados.TipoCombustible.valueOf( _datos[8]);
+            boolean descapotable = Boolean.parseBoolean(_datos[9]);
             
-            switch (nComb) 
-            {
-                case 1: 
-                    combustible = Enumerados.TipoCombustible.GASOLINA;
-                    combValido = true;
-                    break;
-                case 2:
-                    combustible = Enumerados.TipoCombustible.DIESEL;
-                    combValido = true;
-                    break;
-                case 3:
-                    combustible = Enumerados.TipoCombustible.HIBRIDO;
-                    combValido = true;
-                    break;
-                case 4:
-                    combustible = Enumerados.TipoCombustible.ELECTRICO;
-                    combValido = true;
-                    break;
-                default:
-                    combustible = Enumerados.TipoCombustible.GASOLINA;
-                    combValido = true;
-                    break;
-            }
+            Enumerados.CajaCambio cambio = Enumerados.CajaCambio.valueOf(_datos[10]);
             
-            if (combValido) 
-            {
-                try 
-                {
-                    boolean descapotable = Boolean.parseBoolean(_datos[9]);
-                    Enumerados.CajaCambio cambio = null;
-                    boolean cambValido = false;
-                    
-                    int nCamb = Integer.parseInt(_datos[10]);
-                    switch (nCamb) 
-                    {
-                        case 1:
-                            cambio = Enumerados.CajaCambio.MANUAL;
-                            cambValido = true;
-                            break;
-                        case 2:
-                            cambio = Enumerados.CajaCambio.AUTOMATICA;
-                            cambValido = true;
-                            break;
-                        default:
-                            cambio = Enumerados.CajaCambio.MANUAL;
-                            cambValido = true;
-                            break;
-                    }
-                    
-                    if (cambValido)
-                    {
-                        deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
-                    }
-                }
-                catch (Exception e){}
-            }
+
+            
+            
+            deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+            
         }
         catch(Exception e) {}
         
@@ -464,51 +413,19 @@ public class RLC_AlquilerVehiculos {
         {
             int nPuertas = Integer.parseInt(_datos[7]);
             
-            Enumerados.TipoCombustible combustible = null;
-            boolean combValido = false;
             
-            int nComb = Integer.parseInt(_datos[8]);
+            Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
             
-            switch (nComb) 
-            {
-                case 1: 
-                    combustible = Enumerados.TipoCombustible.GASOLINA;
-                    combValido = true;
-                    break;
-                case 2:
-                    combustible = Enumerados.TipoCombustible.DIESEL;
-                    combValido = true;
-                    break;
-                case 3:
-                    combustible = Enumerados.TipoCombustible.HIBRIDO;
-                    combValido = true;
-                    break;
-                case 4:
-                    combustible = Enumerados.TipoCombustible.ELECTRICO;
-                    combValido = true;
-                    break;
-                default:
-                    combustible = Enumerados.TipoCombustible.GASOLINA;
-                    combValido = true;
-                    break;
-            }
-            
-            if (combValido) 
-            {
-                try 
-                {
-                    int nPlazas = Integer.parseInt(_datos[9]);
+            int nPlazas = Integer.parseInt(_datos[9]);
                     
-                    if (nPlazas < 4)
-                        nPlazas = 4;
-                    if (nPlazas > 7)
-                        nPlazas = 7;
-                    boolean sillaBebe = Boolean.parseBoolean(_datos[10]);
-                    
-                    familiar = new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
-                }
-                catch (Exception e){}
-            }
+            if (nPlazas < 4)
+                    nPlazas = 4;
+                if (nPlazas > 7)
+                    nPlazas = 7;
+                boolean sillaBebe = Boolean.parseBoolean(_datos[10]);
+
+                familiar = new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+            
         }
         catch(Exception e) {}
         
@@ -549,9 +466,6 @@ public class RLC_AlquilerVehiculos {
             tamano = Enumerados.Tamano.valueOf(_datos[10]);
             
             furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
-            
-            
-            
         }
         catch(Exception e) {}
 
@@ -737,11 +651,10 @@ public class RLC_AlquilerVehiculos {
     {
         for (int i = 0; i < nAlquileres; i++) 
         {
-            if(alquileres[i].getVehiculo().isDisponible() == false)
-            {
-                ES.escribir(alquileres[i].toString());
-                ES.escribirLn("");
-            }
+           
+            ES.escribir(alquileres[i].toString());
+            ES.escribirLn("");
+            
         }
     }
     
@@ -917,7 +830,7 @@ public class RLC_AlquilerVehiculos {
                             
                             boolean baja = Boolean.parseBoolean(datos[6]);
                             
-                            if (!baja)
+                            if (baja)
                                 vehiculos[nVehiculos - 1].darDeBaja();
                             
                         }
@@ -952,7 +865,7 @@ public class RLC_AlquilerVehiculos {
                         {
                             LocalDateTime fecha = LocalDateTime.parse(datos[2]);
                             LocalDateTime fechaFin = null;
-                            if (!"0".equals(datos[3]))
+                            if (!"null".equals(datos[3]))
                                 fechaFin = LocalDateTime.parse(datos[3]);
                                 
                             alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);

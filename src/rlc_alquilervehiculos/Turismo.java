@@ -42,29 +42,6 @@ public abstract class Turismo extends Vehiculo
     @Override
     public String escribirFichero()
     {
-        int nComb = 0;
-        if (combustible == Enumerados.TipoCombustible.GASOLINA)
-        {
-            nComb = 1;
-        }
-        else 
-        {
-            if (combustible == Enumerados.TipoCombustible.DIESEL)
-            {
-                nComb = 2;
-            }
-            else
-            {
-                if(combustible == Enumerados.TipoCombustible.HIBRIDO)
-                {
-                    nComb = 3;
-                }
-                else
-                {
-                    nComb = 4;
-                }
-            }
-        }
         return(super.escribirFichero() + "#" + nPuertas + "#" + combustible);
     }
 }
