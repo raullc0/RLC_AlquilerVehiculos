@@ -7,6 +7,9 @@ package rlc_alquilervehiculos;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  *
@@ -117,5 +120,42 @@ public class Alquiler {
         return(cliente.getDni() + "#" + vehiculo.getMatricula() + "#" + fecha + "#" + fechaFin);
     }
     
-    
+    public Element escribirXML(Document _doc) {
+        Element eUsuario = (Element) _doc.createElement("Alquiler");
+
+        // cliente
+        Element elemento = _doc.createElement("cliente");
+        Text textElemento = _doc.createTextNode(cliente.getDni());
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // vehiculo
+        elemento = _doc.createElement("vehiculo");
+        textElemento = _doc.createTextNode(vehiculo.getMatricula());
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // estadoAlquiler
+        elemento = _doc.createElement("estadoAlquiler");
+        textElemento = _doc.createTextNode((fechaFin == null) + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // fecha
+        elemento = _doc.createElement("fecha");
+        textElemento = _doc.createTextNode(fecha + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // fDevolucion
+        elemento = _doc.createElement("fDevolucion");
+        if (fechaFin != null)
+        {
+            textElemento = _doc.createTextNode(fechaFin + "");
+            elemento.appendChild(textElemento);
+        }
+        eUsuario.appendChild(elemento);
+
+        return (eUsuario);
+    }
 }

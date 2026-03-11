@@ -4,6 +4,9 @@
  */
 package rlc_alquilervehiculos;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 
 
 /**
@@ -43,5 +46,10 @@ public abstract class Turismo extends Vehiculo
     public String escribirFichero()
     {
         return(super.escribirFichero() + "#" + nPuertas + "#" + combustible);
+    }
+    
+    @Override
+    public Element escribirXML(Document _doc) {
+        return (super.escribirXML(_doc));
     }
 }

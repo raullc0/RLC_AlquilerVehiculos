@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<AquilerVehiculos>
+    <Cliente>
+        <DNI>12345678Z</DNI>
+        <nombre>BRUNO</nombre>
+        <direccion>APOSITE 89</direccion>
+        <localidad>ROMA</localidad>
+        <cp>42009</cp>
+        <baja>false</baja>
+    </Cliente>
+    <Deportivo>
+        <matricula>0895KMK</matricula>
+        <marca>HONDA</marca>
+        <modelo>JUNIO</modelo>
+        <cilindrada>500</cilindrada>
+        <disponible>true</disponible>
+        <baja>false</baja>
+        <npuertas>6</npuertas>
+        <combustible>ELECTRICO</combustible>
+        <descapotable>true</descapotable>
+        <cambio>AUTOMATICA</cambio>
+    </Deportivo>
+    <Familiar>
+        <matricula>0892BLT</matricula>
+        <marca>OPEL</marca>
+        <modelo>CORSA</modelo>
+        <cilindrada>599</cilindrada>
+        <disponible>false</disponible>
+        <baja>false</baja>
+        <npuertas>8</npuertas>
+        <combustible>ELECTRICO</combustible>
+        <nplazas>7</nplazas>
+        <sillabebe>true</sillabebe>
+    </Familiar>
+    <Alquiler>
+        <cliente>12345678Z</cliente>
+        <vehiculo>0892BLT</vehiculo>
+        <estadoAlquiler>true</estadoAlquiler>
+        <fecha>2026-03-10T21:17:53.011094</fecha>
+        <fDevolucion/>
+    </Alquiler>
+</AquilerVehiculos>

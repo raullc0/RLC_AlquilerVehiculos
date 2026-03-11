@@ -4,6 +4,10 @@
  */
 package rlc_alquilervehiculos;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
 /**
  *
  * @author dam1
@@ -95,5 +99,9 @@ public abstract class Vehiculo {
     public String escribirFichero()
     {
         return(matricula + "#" + marca + "#" + modelo + "#" + cilindrada + "#" + disponible + "#" + deBaja);
+    }
+    
+    public Element escribirXML(Document _doc) {
+        return (null);
     }
 }

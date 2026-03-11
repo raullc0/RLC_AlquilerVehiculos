@@ -8,6 +8,19 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import utiles.ES;
 import utiles.Utilidades;
 
@@ -24,6 +37,9 @@ public class RLC_AlquilerVehiculos {
         se debe establecer un limite alto si se 
         quieren cambiar datos con fecuencia
     */
+    public static final String ET_ALQUILERVEHICULOS = "AquilerVehiculos";
+    public static final String NOMBRE_XML = "alquilervehiculo.xml";
+    
     public static final String RUTA_CLIENTES = "datos\\clientes_RLC.dat";
     public static final String RUTA_VEHICULOS = "datos\\vehiculos_RLC.dat";
     public static final String RUTA_ALQUILERES = "datos\\alquileres_RLC.dat";
@@ -157,6 +173,7 @@ public class RLC_AlquilerVehiculos {
                     break;
                 case 12:
                     guardarDatos(RUTA_CLIENTES, RUTA_VEHICULOS, RUTA_ALQUILERES);
+                    guardarXML();
                     break;
                 case 13:
                     crearCopiaDeSeguridad();
@@ -189,7 +206,7 @@ public class RLC_AlquilerVehiculos {
         ES.escribirCl("\t10. Cerrar un alquiler\n", "ANSI_BLUE");
         ES.escribirCl("\t11. Listar alquileres\n", "ANSI_BLUE");
         ES.escribirLn("");
-        ES.escribirLn("\t12. Guardar datos");
+        ES.escribirLn("\t12. Guardar datos (.dat y XML)");
         ES.escribirLn("");
         ES.escribirLn("\t13. Realizar copia de seguridad");
         ES.escribirLn("\t14. Recuperar copia de seguridad");
@@ -379,9 +396,7 @@ public class RLC_AlquilerVehiculos {
             
             Enumerados.CajaCambio cambio = Enumerados.CajaCambio.valueOf(_datos[10]);
             
-
-            
-            
+ 
             deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
             
         }
@@ -966,6 +981,78 @@ public class RLC_AlquilerVehiculos {
         }
         
         return copias;
+    }
+    
+    private static void guardarXML()
+    {
+        try
+        {
+            
+            // 1. CREAR DOCUMENTO
+             // Crear una instancia de DocumentBuilderFactory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+             // Crear un documentBuilder
+            DocumentBuilder builder = factory.newDocumentBuilder();
+             // Crear un DOMImplementation
+             // DOMImplementation implementation = builder.getDOMImplementation();
+             // Crear un documento con un elemento raiz
+            Document documento = builder.newDocument() ;
+             // documento.setXmlVersion("1.0");
+
+            // 2. DEFINIR ELEMENTO RAÍZ
+            ES.escribirLn(" --------->   Escribiendo fichero XML");
+            Element elementoRaiz = documento.createElement(ET_ALQUILERVEHICULOS);
+            documento.appendChild(elementoRaiz);
+            
+            // 3. AÑADIR DATOS
+            ES.escribirLn("Guardando informacion de los clientes.");
+            for(  int i = 0; i < nClientes; i++) 
+            {
+                Element eUsuario = clientes[i].escribirXML( documento) ;
+                elementoRaiz.appendChild( eUsuario);
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion CLIENTE guardada.");
+            
+            ES.escribirLn("Guardando informacion de los vehiculos.");
+            for(  int i = 0; i < nVehiculos; i++) 
+            {
+                Element eUsuario = vehiculos[i].escribirXML( documento) ;
+                elementoRaiz.appendChild( eUsuario);
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion VEHICULOS guardada.");
+            
+            ES.escribirLn("Guardando informacion de los alquileres.");
+            for(  int i = 0; i < nAlquileres; i++) 
+            {
+                Element eUsuario = alquileres[i].escribirXML( documento) ;
+                elementoRaiz.appendChild( eUsuario);
+                ES.escribir("-");
+            }
+            ES.escribirLn("Informacion ALQUILERES guardada.");
+           
+            // 4. TRANSFORMAR Y GUARDAR
+            // Asociar el source con el Document
+            Source fuente = new DOMSource(documento);
+
+            // Crear el Result, indicado que fichero se va a crear
+            Result resultado = new StreamResult(new File( NOMBRE_XML));
+
+            // Creo un transformer, se crea el fichero XML
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            //Insertar saltos de línea al final de cada línea
+            transformer.setOutputProperty( OutputKeys.INDENT, "yes");
+            transformer.transform( fuente, resultado);
+           
+
+            System.out.println("----------------------------------------------");
+      }
+      catch( ParserConfigurationException | TransformerException ex)
+      {
+         System.out.println(ex.getMessage());         
+      }
+      
     }
     
 }

@@ -4,6 +4,8 @@
  */
 package rlc_alquilervehiculos;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import utiles.ES;
 
 /**
@@ -81,5 +83,10 @@ public abstract class Mercancias extends Vehiculo
     public String escribirFichero()
     {
         return(super.escribirFichero() + "#" + pma + "#" + volumen);
+    }
+    
+    @Override
+    public Element escribirXML(Document _doc) {
+        return (super.escribirXML(_doc));
     }
 }

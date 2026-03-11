@@ -4,6 +4,10 @@
  */
 package rlc_alquilervehiculos;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
 /**
  *
  * @author raull
@@ -54,5 +58,76 @@ public class Deportivo extends Turismo
     public String escribirFichero()
     {
         return("1" + "#" + super.escribirFichero() + "#" + descapotable + "#" + cambio + "\n");
+    }
+    
+    @Override
+    public Element escribirXML(Document _doc) {
+        Element eUsuario = (Element) _doc.createElement("Deportivo");
+
+        super.escribirXML(_doc);
+        // matricula
+        Element elemento = _doc.createElement("matricula");
+        Text textElemento = _doc.createTextNode(super.getMatricula());
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // marca
+        elemento = _doc.createElement("marca");
+        textElemento = _doc.createTextNode(super.getMarca());
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // modelo
+        elemento = _doc.createElement("modelo");
+        textElemento = _doc.createTextNode(super.getModelo());
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // cilindrada
+        elemento = _doc.createElement("cilindrada");
+        textElemento = _doc.createTextNode(super.getCilindrada() + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        
+        // disponible
+        elemento = _doc.createElement("disponible");
+        textElemento = _doc.createTextNode(super.isDisponible() + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // deBaja
+        elemento = _doc.createElement("baja");
+        textElemento = _doc.createTextNode(super.estaDeBaja() + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        
+        // npuertas
+        elemento = _doc.createElement("npuertas");
+        textElemento = _doc.createTextNode(super.getPuertas() + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // combustible
+        elemento = _doc.createElement("combustible");
+        textElemento = _doc.createTextNode(combustible + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        
+        // descapotable
+        elemento = _doc.createElement("descapotable");
+        textElemento = _doc.createTextNode(descapotable + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // cambio
+        elemento = _doc.createElement("cambio");
+        textElemento = _doc.createTextNode(cambio + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        return (eUsuario);
     }
 }

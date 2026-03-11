@@ -4,6 +4,10 @@
  */
 package rlc_alquilervehiculos;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
 /**
  *
  * @author dam1
@@ -90,5 +94,47 @@ public class Cliente {
     public String escribirFichero()
     {
         return(dni + "#" + nombre + "#" + direccion + "#" + localidad + "#" + codigoPostal + "#" + deBaja + "\n");
+    }
+    
+    public Element escribirXML(Document _doc) {
+        Element eUsuario = (Element) _doc.createElement("Cliente");
+
+        // DNI
+        Element elemento = _doc.createElement("DNI");
+        Text textElemento = _doc.createTextNode(dni);
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // nombre
+        elemento = _doc.createElement("nombre");
+        textElemento = _doc.createTextNode(nombre);
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // direccion
+        elemento = _doc.createElement("direccion");
+        textElemento = _doc.createTextNode(direccion);
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // localidad
+        elemento = _doc.createElement("localidad");
+        textElemento = _doc.createTextNode(localidad);
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        // codigoPostal
+        elemento = _doc.createElement("cp");
+        textElemento = _doc.createTextNode(codigoPostal);
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+        
+        // deBaja
+        elemento = _doc.createElement("baja");
+        textElemento = _doc.createTextNode(deBaja + "");
+        elemento.appendChild(textElemento);
+        eUsuario.appendChild(elemento);
+
+        return (eUsuario);
     }
 }
