@@ -19,8 +19,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import utiles.ES;
 import utiles.Utilidades;
 
@@ -98,7 +102,10 @@ public class RLC_AlquilerVehiculos {
                         boolean guardar = ES.siono();
 
                         if(guardar)
+                        {
                             guardarDatos(RUTA_CLIENTES, RUTA_VEHICULOS, RUTA_ALQUILERES);
+                            guardarXML();
+                        }
                     }
                     break;
                 case 1:
@@ -181,6 +188,9 @@ public class RLC_AlquilerVehiculos {
                 case 14:
                     recuperarCopiaDeSeguridad();
                     break;
+                case 15:
+                    leerXML();
+                    break;
             }
         }
         while(opcionMenu != 0);
@@ -210,6 +220,8 @@ public class RLC_AlquilerVehiculos {
         ES.escribirLn("");
         ES.escribirLn("\t13. Realizar copia de seguridad");
         ES.escribirLn("\t14. Recuperar copia de seguridad");
+        ES.escribirLn("");
+        ES.escribirLn("\t15. Cargar datos del XML");
         ES.escribirCl("0. SALIR\n", "ANSI_BLACK");
         ES.escribirCl("--------------------------------\n", "ANSI_PURPLE");
         ES.escribirCl("Escriba la opcion: ", "ANSI_CYAN");
@@ -780,7 +792,43 @@ public class RLC_AlquilerVehiculos {
                 
                 Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
                 
+                if (Boolean.parseBoolean(datos[5]) == true)
+                    cliente.darDeBaja();
+                
                 anadirCliente(cliente);
+            }
+            else
+                ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
+            
+            
+        }
+        else
+            ES.escribirCl("Error: DNI no valido\n", "ANSI_RED");
+    }
+    
+    public static void crearClienteConDatos(String [] _datos)
+    {
+        
+        if (Utilidades.comprobarDni(_datos[0]) == true)
+        {
+            String dni = _datos[0];
+            dni = ES.toUpperCase(dni);
+            
+            String nombre = _datos[1];
+            String direccion = _datos[2];
+            String localidad = _datos[3];
+
+            
+            if (Utilidades.comprobarCodigoPostal(_datos[4]) == true)
+            {
+                String codigoPostal = _datos[4];
+                
+                Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
+                
+                if (Boolean.parseBoolean(_datos[5]) == true)
+                    cliente.darDeBaja();
+                
+                anadirCliente(cliente); 
             }
             else
                 ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
@@ -882,6 +930,46 @@ public class RLC_AlquilerVehiculos {
                             LocalDateTime fechaFin = null;
                             if (!"null".equals(datos[3]))
                                 fechaFin = LocalDateTime.parse(datos[3]);
+                                
+                            alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
+                            nAlquileres++;
+                        }
+                        catch(Exception e){}
+                    }
+                    else
+                        ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
+                    
+                }
+                catch(Exception e){}
+            }
+        }
+    }
+    
+    public static void crearAlquilerConDatos(String [] _datos)
+    {
+        
+        
+        if (Utilidades.comprobarDni(_datos[0]) == true)
+        {
+            String dni = _datos[0];
+            dni = dni.toUpperCase();
+            
+            if(Utilidades.comprobarMatricula(_datos[1]) == true)
+            {
+                String matricula = _datos[1];
+                matricula = matricula.toUpperCase();
+                
+                try 
+                {
+                    
+                    if (nAlquileres < MAX_ALQUILERES) 
+                    {
+                        try 
+                        {
+                            LocalDateTime fecha = LocalDateTime.parse(_datos[2]);
+                            LocalDateTime fechaFin = null;
+                            if (!"".equals(_datos[3]))
+                                fechaFin = LocalDateTime.parse(_datos[3]);
                                 
                             alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
                             nAlquileres++;
@@ -1053,6 +1141,183 @@ public class RLC_AlquilerVehiculos {
          System.out.println(ex.getMessage());         
       }
       
+    }
+    
+    private static void leerXML()
+    {
+        // DELICADO: LIMPIAR DATOS ANTES DE CARGAR
+        
+        vehiculos = null;
+        clientes = null;
+        alquileres = null;
+        
+        vehiculos = new Vehiculo[MAX_VEHICULOS];
+        clientes = new Cliente[MAX_CLIENTES];
+        alquileres = new Alquiler[MAX_ALQUILERES];
+        
+        nVehiculos = 0;
+        nClientes = 0;
+        nAlquileres = 0;
+      
+        System.out.println(" --------->   Lectura fichero XML");
+        try{
+         
+            // Crear una instancia de DocumentBuilderFactory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            // Crear un documentBuilder
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            // Obtener el documento, a partir del XML
+            Document documento = builder.parse(new File(NOMBRE_XML));
+            
+
+            // lectura y cargar los clientes
+            // Coger todas las etiquetas
+            NodeList listaNodosClientes = null;
+            listaNodosClientes = documento.getElementsByTagName("Cliente");
+            
+            
+            for (int i = 0; i < listaNodosClientes.getLength(); i++) {
+                // Cojo el nodo actual
+                Node nodoClientes = listaNodosClientes.item(i);
+
+                // Comprobar si el nodo es un elemento
+                if (nodoClientes.getNodeType() == Node.ELEMENT_NODE) {
+                    
+                    Element e = (Element) nodoClientes;
+      
+                    String [] datosCliente = new String [6];
+                    datosCliente[0] = e.getElementsByTagName("DNI").item(0).getTextContent();
+                    datosCliente[1] = e.getElementsByTagName("nombre").item(0).getTextContent();
+                    datosCliente[2] = e.getElementsByTagName("direccion").item(0).getTextContent();
+                    datosCliente[3] = e.getElementsByTagName("localidad").item(0).getTextContent();
+                    datosCliente[4] = e.getElementsByTagName("cp").item(0).getTextContent();
+                    datosCliente[5] = e.getElementsByTagName("baja").item(0).getTextContent();
+                    
+                    
+                    crearClienteConDatos(datosCliente);
+                }
+            }
+            
+            // lectura y cargar los deportivos
+            // Coger todas las etiquetas
+            NodeList listaNodosDeportivos = null;
+            listaNodosDeportivos = documento.getElementsByTagName("Deportivo");
+            
+            
+            for (int i = 0; i < listaNodosDeportivos.getLength(); i++) {
+                // Cojo el nodo actual
+                Node nodoDeportivos = listaNodosDeportivos.item(i);
+
+                // Comprobar si el nodo es un elemento
+                if (nodoDeportivos.getNodeType() == Node.ELEMENT_NODE) {
+                    
+                    Element e = (Element) nodoDeportivos;
+      
+                    String [] datosDeportivo = new String [11];
+                    
+                    String matricula = e.getElementsByTagName("matricula").item(0).getTextContent();
+                    String marca = e.getElementsByTagName("marca").item(0).getTextContent();
+                    String modelo = e.getElementsByTagName("modelo").item(0).getTextContent();
+                    int cilindrada = Integer.parseInt( e.getElementsByTagName("cilindrada").item(0).getTextContent());
+                    datosDeportivo[7] = e.getElementsByTagName("npuertas").item(0).getTextContent();
+                    datosDeportivo[8] = e.getElementsByTagName("combustible").item(0).getTextContent();
+                    datosDeportivo[9] = e.getElementsByTagName("descapotable").item(0).getTextContent();
+                    datosDeportivo[10] = e.getElementsByTagName("cambio").item(0).getTextContent();
+                    
+                    anadirVehiculo(datosDeportivo(matricula, marca, modelo, cilindrada, datosDeportivo));
+                }
+            }
+            
+            // lectura y cargar los familiares
+            // Coger todas las etiquetas
+            NodeList listaNodosFamiliares = null;
+            listaNodosFamiliares = documento.getElementsByTagName("Familiar");
+            
+            
+            for (int i = 0; i < listaNodosFamiliares.getLength(); i++) {
+                // Cojo el nodo actual
+                Node nodoFamiliares = listaNodosFamiliares.item(i);
+
+                // Comprobar si el nodo es un elemento
+                if (nodoFamiliares.getNodeType() == Node.ELEMENT_NODE) {
+                    
+                    Element e = (Element) nodoFamiliares;
+      
+                    String [] datosFamiliar = new String [11];
+                    
+                    String matricula = e.getElementsByTagName("matricula").item(0).getTextContent();
+                    String marca = e.getElementsByTagName("marca").item(0).getTextContent();
+                    String modelo = e.getElementsByTagName("modelo").item(0).getTextContent();
+                    int cilindrada = Integer.parseInt( e.getElementsByTagName("cilindrada").item(0).getTextContent());
+                    datosFamiliar[7] = e.getElementsByTagName("npuertas").item(0).getTextContent();
+                    datosFamiliar[8] = e.getElementsByTagName("combustible").item(0).getTextContent();
+                    datosFamiliar[9] = e.getElementsByTagName("nplazas").item(0).getTextContent();
+                    datosFamiliar[10] = e.getElementsByTagName("sillabebe").item(0).getTextContent();
+                    
+                    anadirVehiculo(datosFamiliar(matricula, marca, modelo, cilindrada, datosFamiliar));
+                }
+            }
+            
+            // lectura y cargar las furgonetas
+            // Coger todas las etiquetas
+            NodeList listaNodosFurgonetas = null;
+            listaNodosFurgonetas = documento.getElementsByTagName("Furgoneta");
+            
+            
+            for (int i = 0; i < listaNodosFurgonetas.getLength(); i++) {
+                // Cojo el nodo actual
+                Node nodoFurgonetas = listaNodosFurgonetas.item(i);
+
+                // Comprobar si el nodo es un elemento
+                if (nodoFurgonetas.getNodeType() == Node.ELEMENT_NODE) {
+                    
+                    Element e = (Element) nodoFurgonetas;
+      
+                    String [] datosFamiliar = new String [11];
+                    
+                    String matricula = e.getElementsByTagName("matricula").item(0).getTextContent();
+                    String marca = e.getElementsByTagName("marca").item(0).getTextContent();
+                    String modelo = e.getElementsByTagName("modelo").item(0).getTextContent();
+                    int cilindrada = Integer.parseInt( e.getElementsByTagName("cilindrada").item(0).getTextContent());
+                    datosFamiliar[7] = e.getElementsByTagName("pma").item(0).getTextContent();
+                    datosFamiliar[8] = e.getElementsByTagName("volumen").item(0).getTextContent();
+                    datosFamiliar[9] = e.getElementsByTagName("refrigerado").item(0).getTextContent();
+                    datosFamiliar[10] = e.getElementsByTagName("tamano").item(0).getTextContent();
+                    
+                    anadirVehiculo(datosFurgoneta(matricula, marca, modelo, cilindrada, datosFamiliar));
+                }
+            }
+            
+            // lectura y cargar los alquileres
+            // Coger todas las etiquetas
+            NodeList listaNodosAlquileres = null;
+            listaNodosAlquileres = documento.getElementsByTagName("Alquiler");
+            
+            
+            for (int i = 0; i < listaNodosAlquileres.getLength(); i++) {
+                // Cojo el nodo actual
+                Node nodoAlquileres = listaNodosAlquileres.item(i);
+
+                // Comprobar si el nodo es un elemento
+                if (nodoAlquileres.getNodeType() == Node.ELEMENT_NODE) {
+                    
+                    Element e = (Element) nodoAlquileres;
+      
+                    String [] datosAlquiler = new String [5];
+                    
+                    datosAlquiler[0] = e.getElementsByTagName("cliente").item(0).getTextContent();
+                    datosAlquiler[1] = e.getElementsByTagName("vehiculo").item(0).getTextContent();
+                    datosAlquiler[2] = e.getElementsByTagName("fecha").item(0).getTextContent();
+                    datosAlquiler[3] = e.getElementsByTagName("fDevolucion").item(0).getTextContent();
+                    
+                    crearAlquilerConDatos(datosAlquiler);
+                }
+            }
+            
+
+        } catch (IOException | ParserConfigurationException | DOMException | SAXException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
 }
