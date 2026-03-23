@@ -4,10 +4,18 @@
  */
 package rlc_alquilervehiculos;
 
+import objetos.Cliente;
+import objetos.Vehiculo;
+import objetos.vehiculos.mercancias.Furgoneta;
+import objetos.vehiculos.turismos.Deportivo;
+import objetos.vehiculos.turismos.Familiar;
+import objetos.Alquiler;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,11 +38,11 @@ import utiles.Utilidades;
 
 /**
  *
- * @author dam1
+ * @author raullc0
  */
 public class RLC_AlquilerVehiculos {
 
-    // Atributos
+// ATRIBUTOS --------------------------------------------------------------------------------------------------
     
     /*
         Importante: ya que los datos no se borran, 
@@ -49,29 +57,21 @@ public class RLC_AlquilerVehiculos {
     public static final String RUTA_ALQUILERES = "datos\\alquileres_RLC.dat";
     public static final String RUTA_BACKUPS = "backups\\";
     
-    private static final int MAX_CLIENTES = 50;
-    private static final int MAX_VEHICULOS = 50; 
-    private static final int MAX_ALQUILERES = 50;
-    
-    private static Cliente [] clientes;
-    private static Vehiculo [] vehiculos;
-    private static Alquiler [] alquileres;
-    
-    public static int nClientes = 0;
-    public static int nVehiculos = 0;
-    public static int nAlquileres = 0;
+    static ArrayList<Cliente>  lClientes;
+    static ArrayList<Vehiculo>  lVehiculos;
+    static ArrayList<Alquiler>  lAlquileres;
     
     
-    // Main
+// MAIN -------------------------------------------------------------------------------------------------------
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // Dar memoria a los arrays
-        vehiculos = new Vehiculo[MAX_VEHICULOS];
-        clientes = new Cliente[MAX_CLIENTES];
-        alquileres = new Alquiler[MAX_ALQUILERES];
+        lClientes = new ArrayList<Cliente>();
+        lVehiculos = new ArrayList<Vehiculo>();
+        lAlquileres = new ArrayList<Alquiler>();
         
         // Logica del programa
         int opcionMenu;
@@ -112,7 +112,9 @@ public class RLC_AlquilerVehiculos {
                     anadirCliente(pedirDatosCliente());
                     break;
                 case 2:
-                    borrarCliente(pedirDNI());
+                    dni = pedirDNI();
+                    darDeBajaACliente(dni);
+                    borrarCliente(dni);
                     break;
                 case 3:
                     listarClientes(false);
@@ -126,7 +128,9 @@ public class RLC_AlquilerVehiculos {
                     anadirVehiculo(pedirDatosVehiculo());
                     break;
                 case 6:
-                    borrarVehiculo(pedirMatricula());
+                    matricula = pedirMatricula();
+                    darDeBajaAVehiculo(matricula);
+                    borrarVehiculo(matricula);
                     break;
                 case 7:
                     listarVehiculos(false);
@@ -197,7 +201,7 @@ public class RLC_AlquilerVehiculos {
         
     }
     
-    // Metodos
+// METODOS ----------------------------------------------------------------------------------------------------
     
     private static void menu() 
     {
@@ -228,6 +232,60 @@ public class RLC_AlquilerVehiculos {
         
     }
     
+    // CLIENTES ----------------------------------------------------------------------------------------------------
+    
+    private static Cliente getCliente(String _dni)
+    {
+        Cliente cliente = lClientes.stream().filter(c -> c.getDni().equals(_dni))
+        .findFirst()
+        .orElse(null); // Devuelve null si no lo encuentra
+        
+        return cliente ;
+    }
+    
+    private static void anadirCliente(Cliente cliente)
+    {
+        
+        if( getCliente(cliente.getDni()) == null)
+        {
+            lClientes.add(cliente);
+        }
+        else
+            ES.escribirCl("Error: El cliente con dicho DNI ya existe\n", "ANSI_RED");
+       
+    }
+    
+    public static void crearClienteConDatos(String [] _datos)
+    {
+        String dni = _datos[0];
+        dni = ES.toUpperCase(dni);
+
+        if (Utilidades.comprobarDni(dni) == true) 
+        {
+            String nombre = _datos[1];
+            String direccion = _datos[2];
+            String localidad = _datos[3];
+
+
+            if (Utilidades.comprobarCodigoPostal(_datos[4]) == true)
+            {
+                String codigoPostal = _datos[4];
+
+                Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
+
+                if (Boolean.parseBoolean(_datos[5]) == true)
+                    cliente.darDeBaja();
+
+                anadirCliente(cliente); 
+            }
+            else
+                ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
+        }
+        else
+            ES.escribirCl("Error: DNI no valido\n", "ANSI_RED");
+            
+        
+    }
     
     private static Cliente pedirDatosCliente() 
     {
@@ -271,74 +329,132 @@ public class RLC_AlquilerVehiculos {
         return dni;
     }
     
-    
-    private static Cliente getCliente(String _dni) 
+    private static void borrarCliente(String _dni)
     {
-        boolean encontrado = false;
-        Cliente cliente = null;
-        
-        if(_dni != null)
-        {
-            for( int i = 0; i < nClientes && !encontrado; i++)
-            {
-                if(clientes[i] != null)
-                {
-                    if(clientes[i].getDni().equals(_dni)) 
-                    {
-                        encontrado = true;
-                        cliente = clientes[i];
-                    }
-                }  
-            }
-        }
-        
-        return cliente;
-    }
-    
-    
-    private static void anadirCliente(Cliente nuevoCliente) 
-    {
-        if (nClientes < MAX_CLIENTES) 
-        {
-            if (getCliente(nuevoCliente.getDni()) == null) 
-            {
-                clientes[nClientes] = nuevoCliente;
-                nClientes++;
-            }
-            else
-                ES.escribirCl("Error: El cliente con dicho DNI ya existe\n", "ANSI_RED");
-        }
-        else
-            ES.escribirCl("Error: No hay mas espacio para nuevos clientes\n", "ANSI_RED");
-    }
-    
-    
-    private static void borrarCliente(String _dni) 
-    {
-        // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
         if (getCliente(_dni) != null) 
         {
-            getCliente(_dni).toString();
-            ES.escribirCl("Esta seguro de dar de baja al cliente? Si/No\n", "ANSI_RED");
+            ES.escribirCl("Esta seguro de ELIMINAR DEFINITIVAMENTE al cliente? Si/No\n", "ANSI_RED");
             if (ES.siono() == true)
-                getCliente(_dni).darDeBaja();
+                lClientes.remove(getCliente(_dni));
         }
         else
             ES.escribirCl("Error: El cliente con dicho DNI no existe.\n", "ANSI_RED");
     }
     
-    
-    private static void listarClientes(boolean deBaja) 
+    private static void darDeBajaACliente(String _dni)
     {
-        for (int i = 0; i < nClientes; i++) {
-            if (clientes[i].estaDeBaja() == deBaja)
+        if (getCliente(_dni) != null) 
+        {
+            ES.escribirCl("Esta seguro de dar de baja al cliente? Si/No\n", "ANSI_RED");
+            if (ES.siono() == true)
             {
-                ES.escribir(clientes[i].toString());
-                ES.escribirLn("");
+                int i = lClientes.indexOf(getCliente(_dni));
+                lClientes.get(i).darDeBaja();
+            }
+        }
+        else
+            ES.escribirCl("Error: El cliente con dicho DNI no existe.\n", "ANSI_RED");
+    }
+    
+    private static void listarClientes(boolean deBaja)
+    {
+        if(!lClientes.isEmpty())
+        {
+            for (int i = 0; i < lClientes.size(); i++)
+            {
+                if (lClientes.get(i).estaDeBaja() == deBaja)
+                {
+                    ES.escribir(lClientes.get(i).toString());
+                    ES.escribirLn("");
+                }
             }
         }
     }
     
+    // VEHICULOS ---------------------------------------------------------------------------------------------------------------------------
+    
+    private static Vehiculo getVehiculo(String _matricula)
+    {
+        Vehiculo vehiculo = lVehiculos.stream().filter(v -> v.getMatricula().equals(_matricula))
+        .findFirst()
+        .orElse(null); // Devuelve null si no lo encuentra
+        
+        return vehiculo ;
+    }
+    
+    private static void anadirVehiculo(Vehiculo vehiculo) 
+    {
+       
+        if (getVehiculo(vehiculo.getMatricula()) == null) 
+        {
+            lVehiculos.add(vehiculo);
+        }
+        else
+            ES.escribirCl("Error: El vehiculo con dicha matrícula ya existe\n", "ANSI_RED");
+    }
+    
+    public static void crearVehiculoConDatos(String [] _datos) 
+    {
+        if (Utilidades.comprobarMatricula(_datos[1]) == true)
+        {
+            String matricula = _datos[1];
+            matricula = ES.toUpperCase(matricula);
+            
+            
+            String marca = _datos[2];
+            String modelo = _datos[3];
+            
+            try
+            {
+                if(Integer.parseInt(_datos[4]) >= 1)
+                {
+                    int cilindrada = Integer.parseInt(_datos[4]);
+                    
+                    int tipoVehiculo = Integer.parseInt(_datos[0]);
+                    boolean tipoValido = false;
+                    Vehiculo vehiculo = null;
+                    
+                    switch (tipoVehiculo)
+                    {
+                        case 1: 
+                            vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada, _datos);
+                            tipoValido = true;
+                            break;
+                        case 2: 
+                            vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada, _datos);
+                            tipoValido = true;
+                            break;
+                        case 3: 
+                            vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada, _datos);
+                            tipoValido = true;
+                            break;
+                    }
+                    
+                    if(tipoValido) // CREACION DEL VEHICULO
+                    {
+                        if (vehiculo != null)
+                            anadirVehiculo(vehiculo);
+                        
+                        try
+                        {
+                            boolean disponible = Boolean.parseBoolean(_datos[5]);
+                            
+                            if (!disponible)
+                                lVehiculos.get(lVehiculos.indexOf(vehiculo)).setDisponible(disponible);
+                            
+                            boolean baja = Boolean.parseBoolean(_datos[6]);
+                            
+                            if (baja)
+                                lVehiculos.get(lVehiculos.indexOf(vehiculo)).darDeBaja();
+                            
+                        }
+                        catch(Exception e){}
+                    }
+                }
+            } catch (NumberFormatException e){}
+  
+        }
+    }
     
     private static Vehiculo pedirDatosVehiculo()
     {
@@ -371,107 +487,91 @@ public class RLC_AlquilerVehiculos {
         tipoVehiculo = ES.leerEntero("", (byte) 1, (byte) 3);
 
         switch (tipoVehiculo) {
-            case 1 -> vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada);
-            case 2 -> vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada);
-            case 3 -> vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada);
+            case 1 -> vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada, null);
+            case 2 -> vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada, null);
+            case 3 -> vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada, null);
         }
         
         return vehiculo;
     }
     
-    
-    private static Deportivo datosDeportivo(String matricula, String marca, String modelo, int cilindrada)
-    {
-        
-        int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
-
-        Enumerados.TipoCombustible combustible = tipoCombustible();
-        
-        Enumerados.CajaCambio cambio = cajaCambio();
-
-        ES.escribirLn("Es el deportivo descapotable? Si/No");
-        boolean descapotable = ES.siono();
-
-        return new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
-    }
-    
     private static Deportivo datosDeportivo(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
     {
+        
         Deportivo deportivo = null;
         try
         {
-            int nPuertas = Integer.parseInt(_datos[7]);
+            if (_datos != null)
+            {
+                int nPuertas = Integer.parseInt(_datos[7]);
+                
+                Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
             
-            Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
+                boolean descapotable = Boolean.parseBoolean(_datos[9]);
             
-            boolean descapotable = Boolean.parseBoolean(_datos[9]);
+                Enumerados.CajaCambio cambio = Enumerados.CajaCambio.valueOf(_datos[10]);
             
-            Enumerados.CajaCambio cambio = Enumerados.CajaCambio.valueOf(_datos[10]);
-            
- 
-            deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+                deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+            }
+            else // Pedir datos
+            {
+                int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
+
+                Enumerados.TipoCombustible combustible = tipoCombustible();
+
+                Enumerados.CajaCambio cambio = cajaCambio();
+
+                ES.escribirLn("Es el deportivo descapotable? Si/No");
+                boolean descapotable = ES.siono();
+                
+                deportivo = new Deportivo(cambio, descapotable, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+            }
             
         }
-        catch(Exception e) {}
+        catch(NumberFormatException e) {}
         
-
         return deportivo;
-    }
-    
-    
-    private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada)
-    {
-        int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
-        int nPlazas = ES.leerEntero("Introduzca el numero de plazas (4-7): ", (byte) 4, (byte) 7);
-        
-        ES.escribirLn("Tiene silla de bebe? Si/No");
-        boolean sillaBebe = ES.siono();
-
-        Enumerados.TipoCombustible combustible = tipoCombustible();
-
-        return new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
     }
     
     private static Familiar datosFamiliar(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
     {
-        
         Familiar familiar = null;
+        
         try
         {
-            int nPuertas = Integer.parseInt(_datos[7]);
-            
-            
-            Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
-            
-            int nPlazas = Integer.parseInt(_datos[9]);
+            if (_datos != null) 
+            {
+                int nPuertas = Integer.parseInt(_datos[7]);
+
+                Enumerados.TipoCombustible combustible = Enumerados.TipoCombustible.valueOf(_datos[8]);
+
+                int nPlazas = Integer.parseInt(_datos[9]);
+
+                if (nPlazas < 4)
+                        nPlazas = 4;
+                    if (nPlazas > 7)
+                        nPlazas = 7;
                     
-            if (nPlazas < 4)
-                    nPlazas = 4;
-                if (nPlazas > 7)
-                    nPlazas = 7;
                 boolean sillaBebe = Boolean.parseBoolean(_datos[10]);
 
                 familiar = new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
-            
+            }
+            else 
+            {
+                int nPuertas = ES.leerEntero("Introduza el numero de puertas: ");
+                int nPlazas = ES.leerEntero("Introduzca el numero de plazas (4-7): ", (byte) 4, (byte) 7);
+
+                ES.escribirLn("Tiene silla de bebe? Si/No");
+                boolean sillaBebe = ES.siono();
+
+                Enumerados.TipoCombustible combustible = tipoCombustible();
+                
+                familiar = new Familiar(nPlazas, sillaBebe, matricula, marca, modelo, cilindrada, combustible, nPuertas);
+            }
         }
-        catch(Exception e) {}
+        catch(NumberFormatException e) {}
         
         return familiar;
-    }
-    
-    
-    private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada)
-    {
-        
-        int pma = ES.leerEntero("Introduzca el Peso Maximo Autorizado: ", (byte)1);
-        int volumen = ES.leerEntero("Introduzca el volumen: ", (byte)1);
-
-        ES.escribirLn("Esta refrigerada? Si/No: ");
-        boolean refrigerado = ES.siono();
-
-        Enumerados.Tamano tamano = tamano();
-
-        return new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
     }
     
     private static Furgoneta datosFurgoneta(String matricula, String marca, String modelo, int cilindrada, String [] _datos)
@@ -479,27 +579,40 @@ public class RLC_AlquilerVehiculos {
         Furgoneta furgoneta = null;
         try 
         {
-            int pma = Integer.parseInt(_datos[7]);
-            if (pma < 1)
-                pma = 1;
-            
-            int volumen = Integer.parseInt(_datos[8]);
-            if (volumen < 1)
-                volumen = 1;
-            
-            boolean refrigerado = Boolean.parseBoolean(_datos[9]);
-            
-            Enumerados.Tamano tamano = null;
-            tamano = Enumerados.Tamano.valueOf(_datos[10]);
-            
-            furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
+            if (_datos != null) 
+            {
+                int pma = Integer.parseInt(_datos[7]);
+                if (pma < 1)
+                    pma = 1;
+
+                int volumen = Integer.parseInt(_datos[8]);
+                if (volumen < 1)
+                    volumen = 1;
+
+                boolean refrigerado = Boolean.parseBoolean(_datos[9]);
+
+                Enumerados.Tamano tamano = null;
+                tamano = Enumerados.Tamano.valueOf(_datos[10]);
+
+                furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
+            }
+            else
+            {
+                int pma = ES.leerEntero("Introduzca el Peso Maximo Autorizado: ", (byte)1);
+                int volumen = ES.leerEntero("Introduzca el volumen: ", (byte)1);
+
+                ES.escribirLn("Esta refrigerada? Si/No: ");
+                boolean refrigerado = ES.siono();
+
+                Enumerados.Tamano tamano = tamano();
+                
+                furgoneta = new Furgoneta(refrigerado, tamano, pma, volumen, matricula, marca, modelo, cilindrada);
+            }
         }
         catch(Exception e) {}
-
-
+        
         return furgoneta;
     }
-    
     
     private static Enumerados.TipoCombustible tipoCombustible()
     {
@@ -564,83 +677,56 @@ public class RLC_AlquilerVehiculos {
         return matricula;
     }
     
-    
-    private static Vehiculo getVehiculo(String _matricula)
+    private static void borrarVehiculo(String _matricula)
     {
-        boolean encontrado = false;
-        Vehiculo vehiculo = null;
-        
-        if (_matricula != null)
-        {
-            for( int i = 0; i < nVehiculos && !encontrado; i++)
-            {
-                if(vehiculos[i].getMatricula().equals(_matricula)) 
-                {
-                    encontrado = true;
-                    vehiculo = vehiculos[i];
-                }
-            }
-        }
-        
-        return vehiculo;
-    }
-    
-    
-    private static void anadirVehiculo(Vehiculo nuevoVehiculo) 
-    {
-        if (nVehiculos < MAX_VEHICULOS) 
-        {
-            if (getVehiculo(nuevoVehiculo.getMatricula()) == null) 
-            {
-                vehiculos[nVehiculos] = nuevoVehiculo;
-                nVehiculos++;
-            }
-            else
-                ES.escribirCl("Error: El vehiculo con dicha matrícula ya existe\n", "ANSI_RED");
-        }
-        else
-            ES.escribirCl("Error: No hay mas espacio para nuevos vehiculos\n", "ANSI_RED");
-    }
-    
-    
-    private static void borrarVehiculo(String _matricula) 
-    {
-        // Debido a que no queremos perder datos, daremos de baja en vez de establecer a nulo
         if (getVehiculo(_matricula) != null) 
         {
-            getVehiculo(_matricula).toString();
-            ES.escribirCl("Esta seguro de dar de baja al vehiculo? Si/No\n", "ANSI_RED");
+            ES.escribirCl("Esta seguro de ELIMINAR DEFINITIVAMENTE al vehiculo? Si/No\n", "ANSI_RED");
             if (ES.siono() == true)
-                getVehiculo(_matricula).darDeBaja();
+                lVehiculos.remove(getVehiculo(_matricula));
         }
         else
             ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe.\n", "ANSI_RED");
     }
     
+    private static void darDeBajaAVehiculo(String _matricula)
+    {
+        if (getVehiculo(_matricula) != null) 
+        {
+            ES.escribirCl("Esta seguro de dar de baja al vehiculo? Si/No\n", "ANSI_RED");
+            if (ES.siono() == true)
+            {
+                int i = lVehiculos.indexOf(getVehiculo(_matricula));
+                lVehiculos.get(i).darDeBaja();
+            }
+        }
+        else
+            ES.escribirCl("Error: El vehiculo con dicha MATRICULA no existe.\n", "ANSI_RED");
+    }
     
     private static void listarVehiculos(boolean deBaja) 
     {
-        for (int i = 0; i < nVehiculos; i++) {
-            if(vehiculos[i].estaDeBaja() == deBaja)
+        if(!lVehiculos.isEmpty())
+        {
+            for (int i = 0; i < lVehiculos.size(); i++)
             {
-                ES.escribir(vehiculos[i].toString());
-                ES.escribirLn("");
+                if (lVehiculos.get(i).estaDeBaja() == deBaja)
+                {
+                    ES.escribir(lVehiculos.get(i).toString());
+                    ES.escribirLn("");
+                }
             }
         }
     }
+    
+    // ALQUILERES ----------------------------------------------------------------------------------------------------
     
     
     private static void nuevoAlquiler(Cliente cliente, Vehiculo vehiculo)
     {
         if (vehiculo.isDisponible() == true) 
         {
-            if (nAlquileres < MAX_ALQUILERES) 
-            {
-                    alquileres[nAlquileres] = new Alquiler(cliente, vehiculo);
-                    nAlquileres++;
-            }
-            else
-                ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
+            lAlquileres.add(new Alquiler(cliente, vehiculo));
         }
         else
             ES.escribirCl("ERROR: El vehiculo no esta disponible para alquilar. ", "ANSI_RED");
@@ -653,11 +739,11 @@ public class RLC_AlquilerVehiculos {
         
         if (vehiculo.isDisponible() == false) 
         {
-            for (int i = 0; i < nAlquileres; i++) 
+            for (int i = 0; i < lAlquileres.size() && !encontrado; i++) 
             {
-                if(alquileres[i].getCliente() == cliente)
+                if(lAlquileres.get(i).getCliente() == cliente && lAlquileres.get(i).getVehiculo() == vehiculo)
                 {
-                    alquileres[i].cerrar();
+                    lAlquileres.get(i).cerrar();
                     encontrado = true;
                     ES.escribirCl("Alquiler cerrado con exito\n", "ANSI_GREEN");
                     ES.simularPausa();
@@ -673,17 +759,48 @@ public class RLC_AlquilerVehiculos {
         }
     }
     
-    
     private static void listarAlquileres() 
     {
-        for (int i = 0; i < nAlquileres; i++) 
+        if(!lAlquileres.isEmpty())
         {
-           
-            ES.escribir(alquileres[i].toString());
-            ES.escribirLn("");
+            for (int i = 0; i < lAlquileres.size(); i++)
+            {
             
+                ES.escribir(lAlquileres.get(i).toString());
+                ES.escribirLn("");
+            }
         }
     }
+    
+    public static void crearAlquilerConDatos(String [] _datos)
+    {
+        
+        
+        if (Utilidades.comprobarDni(_datos[0]) == true)
+        {
+            String dni = _datos[0];
+            dni = dni.toUpperCase();
+            
+            if(Utilidades.comprobarMatricula(_datos[1]) == true)
+            {
+                String matricula = _datos[1];
+                matricula = matricula.toUpperCase();
+                
+                try 
+                {
+                    LocalDateTime fecha = LocalDateTime.parse(_datos[2]);
+                    LocalDateTime fechaFin = null;
+                    if (!"".equals(_datos[3]))
+                        fechaFin = LocalDateTime.parse(_datos[3]);
+
+                    lAlquileres.add(new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin));
+                }
+                catch(Exception e){}
+            }
+        }
+    }
+    
+    // L/E DATOS ----------------------------------------------------------------------------------------------------
     
     public static boolean guardarDatos(String _rutaCli, String _rutaVeh, String _rutaAlq)
     {
@@ -691,22 +808,22 @@ public class RLC_AlquilerVehiculos {
         
         try {
             ES.escribirLn("Guardando informacion de los clientes.");
-            for (int i = 0; i < nClientes; i++) {
-                ES.escribirArchivo(_rutaCli, clientes[i].escribirFichero(), (i==0));
+            for (int i = 0; i < lClientes.size(); i++) {
+                ES.escribirArchivo(_rutaCli, lClientes.get(i).escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion CLIENTE guardada.");
 
             ES.escribirLn("Guardando informacion de los vehiculos.");
-            for (int i = 0; i < nVehiculos; i++) {
-                ES.escribirArchivo(_rutaVeh, vehiculos[i].escribirFichero(), (i==0));
+            for (int i = 0; i < lVehiculos.size(); i++) {
+                ES.escribirArchivo(_rutaVeh, lVehiculos.get(i).escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion VEHICULOS guardada.");
 
             ES.escribirLn("Guardando informacion de los alquileres.");
-            for (int i = 0; i < nAlquileres; i++) {
-                ES.escribirArchivo(_rutaAlq, alquileres[i].escribirFichero(), (i==0));
+            for (int i = 0; i < lAlquileres.size(); i++) {
+                ES.escribirArchivo(_rutaAlq, lAlquileres.get(i).escribirFichero(), (i==0));
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion ALQUILERES guardada.");
@@ -735,7 +852,8 @@ public class RLC_AlquilerVehiculos {
                 String [] datosClientes = cadenaClientes.split("\n");
             
                 for (int i = 0; i < datosClientes.length; i++) {
-                    crearClienteConDatos(datosClientes[i]);
+                    String [] datos = datosClientes[i].split("#");
+                    crearClienteConDatos(datos);
                 }
             }
             
@@ -746,7 +864,8 @@ public class RLC_AlquilerVehiculos {
                 String [] datosVehiculos = cadenaVehiculos.split("\n");
             
                 for (int i = 0; i < datosVehiculos.length; i++) {
-                    crearVehiculoConDatos(datosVehiculos[i]);
+                    String [] datos = datosVehiculos[i].split("#");
+                    crearVehiculoConDatos(datos);
                 }
             }
             
@@ -757,8 +876,8 @@ public class RLC_AlquilerVehiculos {
                 String [] datosAlquileres = cadenaAlquileres.split("\n");
             
                 for (int i = 0; i < datosAlquileres.length; i++) {
-                    crearAlquilerConDatos(datosAlquileres[i]);
-                
+                    String [] datos = datosAlquileres[i].split("#");
+                    crearAlquilerConDatos(datos);
                 }
             }
             
@@ -772,218 +891,6 @@ public class RLC_AlquilerVehiculos {
         return exito;
     }
     
-    public static void crearClienteConDatos(String _cadena)
-    {
-        String [] datos = _cadena.split("#");
-        
-        if (Utilidades.comprobarDni(datos[0]) == true)
-        {
-            String dni = datos[0];
-            dni = ES.toUpperCase(dni);
-            
-            String nombre = datos[1];
-            String direccion = datos[2];
-            String localidad = datos[3];
-
-            
-            if (Utilidades.comprobarCodigoPostal(datos[4]) == true)
-            {
-                String codigoPostal = datos[4];
-                
-                Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
-                
-                if (Boolean.parseBoolean(datos[5]) == true)
-                    cliente.darDeBaja();
-                
-                anadirCliente(cliente);
-            }
-            else
-                ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
-            
-            
-        }
-        else
-            ES.escribirCl("Error: DNI no valido\n", "ANSI_RED");
-    }
-    
-    public static void crearClienteConDatos(String [] _datos)
-    {
-        
-        if (Utilidades.comprobarDni(_datos[0]) == true)
-        {
-            String dni = _datos[0];
-            dni = ES.toUpperCase(dni);
-            
-            String nombre = _datos[1];
-            String direccion = _datos[2];
-            String localidad = _datos[3];
-
-            
-            if (Utilidades.comprobarCodigoPostal(_datos[4]) == true)
-            {
-                String codigoPostal = _datos[4];
-                
-                Cliente cliente = new Cliente(dni, nombre, direccion, localidad, codigoPostal);
-                
-                if (Boolean.parseBoolean(_datos[5]) == true)
-                    cliente.darDeBaja();
-                
-                anadirCliente(cliente); 
-            }
-            else
-                ES.escribirCl("Error: Codigo postal no valido\n", "ANSI_RED");
-            
-            
-        }
-        else
-            ES.escribirCl("Error: DNI no valido\n", "ANSI_RED");
-    }
-    
-    public static void crearVehiculoConDatos(String _cadena) 
-    {
-        String [] datos = _cadena.split("#");
-        
-        
-        if (Utilidades.comprobarMatricula(datos[1]) == true)
-        {
-            String matricula = datos[1];
-            matricula = ES.toUpperCase(matricula);
-            
-            
-            String marca = datos[2];
-            String modelo = datos[3];
-            
-            try
-            {
-                if(Integer.parseInt(datos[4]) >= 1)
-                {
-                    int cilindrada = Integer.parseInt(datos[4]);
-                    
-                    int tipoVehiculo = Integer.parseInt(datos[0]);
-                    boolean tipoValido = false;
-                    Vehiculo vehiculo = null;
-                    
-                    switch (tipoVehiculo)
-                    {
-                        case 1: 
-                            vehiculo = datosDeportivo(matricula, marca, modelo, cilindrada, datos);
-                            tipoValido = true;
-                            break;
-                        case 2: 
-                            vehiculo = datosFamiliar(matricula, marca, modelo, cilindrada, datos);
-                            tipoValido = true;
-                            break;
-                        case 3: 
-                            vehiculo = datosFurgoneta(matricula, marca, modelo, cilindrada, datos);
-                            tipoValido = true;
-                            break;
-                    }
-                    
-                    if(tipoValido) // CREACION DEL VEHICULO
-                    {
-                        if (vehiculo != null)
-                            anadirVehiculo(vehiculo);
-                        
-                        try
-                        {
-                            boolean disponible = Boolean.parseBoolean(datos[5]);
-                            
-                            if (!disponible)
-                                vehiculos[nVehiculos - 1].setDisponible(disponible);
-                            
-                            boolean baja = Boolean.parseBoolean(datos[6]);
-                            
-                            if (baja)
-                                vehiculos[nVehiculos - 1].darDeBaja();
-                            
-                        }
-                        catch(Exception e){}
-                    }
-                }
-            } catch (NumberFormatException e){}
-  
-        }
-    }
-    
-    public static void crearAlquilerConDatos(String _cadena)
-    {
-        String [] datos = _cadena.split("#");
-        
-        if (Utilidades.comprobarDni(datos[0]) == true)
-        {
-            String dni = datos[0];
-            dni = dni.toUpperCase();
-            
-            if(Utilidades.comprobarMatricula(datos[1]) == true)
-            {
-                String matricula = datos[1];
-                matricula = matricula.toUpperCase();
-                
-                try 
-                {
-                    
-                    if (nAlquileres < MAX_ALQUILERES) 
-                    {
-                        try 
-                        {
-                            LocalDateTime fecha = LocalDateTime.parse(datos[2]);
-                            LocalDateTime fechaFin = null;
-                            if (!"null".equals(datos[3]))
-                                fechaFin = LocalDateTime.parse(datos[3]);
-                                
-                            alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
-                            nAlquileres++;
-                        }
-                        catch(Exception e){}
-                    }
-                    else
-                        ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
-                    
-                }
-                catch(Exception e){}
-            }
-        }
-    }
-    
-    public static void crearAlquilerConDatos(String [] _datos)
-    {
-        
-        
-        if (Utilidades.comprobarDni(_datos[0]) == true)
-        {
-            String dni = _datos[0];
-            dni = dni.toUpperCase();
-            
-            if(Utilidades.comprobarMatricula(_datos[1]) == true)
-            {
-                String matricula = _datos[1];
-                matricula = matricula.toUpperCase();
-                
-                try 
-                {
-                    
-                    if (nAlquileres < MAX_ALQUILERES) 
-                    {
-                        try 
-                        {
-                            LocalDateTime fecha = LocalDateTime.parse(_datos[2]);
-                            LocalDateTime fechaFin = null;
-                            if (!"".equals(_datos[3]))
-                                fechaFin = LocalDateTime.parse(_datos[3]);
-                                
-                            alquileres[nAlquileres] = new Alquiler(getCliente(dni), getVehiculo(matricula), fecha, fechaFin);
-                            nAlquileres++;
-                        }
-                        catch(Exception e){}
-                    }
-                    else
-                        ES.escribirCl("Error: No hay mas espacio para nuevos alquileres\n", "ANSI_RED");
-                    
-                }
-                catch(Exception e){}
-            }
-        }
-    }
     
     public static void crearCopiaDeSeguridad() {
         // Definimos un formato seguro para archivos (sin ":" ni "/")
@@ -1024,17 +931,7 @@ public class RLC_AlquilerVehiculos {
         
         // DELICADO: LIMPIAR DATOS ANTES DE CARGAR
         
-        vehiculos = null;
-        clientes = null;
-        alquileres = null;
-        
-        vehiculos = new Vehiculo[MAX_VEHICULOS];
-        clientes = new Cliente[MAX_CLIENTES];
-        alquileres = new Alquiler[MAX_ALQUILERES];
-        
-        nVehiculos = 0;
-        nClientes = 0;
-        nAlquileres = 0;
+        limpiarDatosDeListas();
         
         // El rango es de 1 hasta el total de copias
         int opcion = ES.leerEntero("Elija el numero de copia: ", 1, copias.length);
@@ -1094,27 +991,27 @@ public class RLC_AlquilerVehiculos {
             
             // 3. AÑADIR DATOS
             ES.escribirLn("Guardando informacion de los clientes.");
-            for(  int i = 0; i < nClientes; i++) 
+            for(  int i = 0; i < lClientes.size(); i++) 
             {
-                Element eUsuario = clientes[i].escribirXML( documento) ;
+                Element eUsuario = lClientes.get(i).escribirXML( documento) ;
                 elementoRaiz.appendChild( eUsuario);
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion CLIENTE guardada.");
             
             ES.escribirLn("Guardando informacion de los vehiculos.");
-            for(  int i = 0; i < nVehiculos; i++) 
+            for(  int i = 0; i < lVehiculos.size(); i++) 
             {
-                Element eUsuario = vehiculos[i].escribirXML( documento) ;
+                Element eUsuario = lVehiculos.get(i).escribirXML( documento) ;
                 elementoRaiz.appendChild( eUsuario);
                 ES.escribir("-");
             }
             ES.escribirLn("Informacion VEHICULOS guardada.");
             
             ES.escribirLn("Guardando informacion de los alquileres.");
-            for(  int i = 0; i < nAlquileres; i++) 
+            for(  int i = 0; i < lAlquileres.size(); i++) 
             {
-                Element eUsuario = alquileres[i].escribirXML( documento) ;
+                Element eUsuario = lAlquileres.get(i).escribirXML( documento) ;
                 elementoRaiz.appendChild( eUsuario);
                 ES.escribir("-");
             }
@@ -1147,17 +1044,7 @@ public class RLC_AlquilerVehiculos {
     {
         // DELICADO: LIMPIAR DATOS ANTES DE CARGAR
         
-        vehiculos = null;
-        clientes = null;
-        alquileres = null;
-        
-        vehiculos = new Vehiculo[MAX_VEHICULOS];
-        clientes = new Cliente[MAX_CLIENTES];
-        alquileres = new Alquiler[MAX_ALQUILERES];
-        
-        nVehiculos = 0;
-        nClientes = 0;
-        nAlquileres = 0;
+        limpiarDatosDeListas();
       
         System.out.println(" --------->   Lectura fichero XML");
         try{
@@ -1318,6 +1205,13 @@ public class RLC_AlquilerVehiculos {
         } catch (IOException | ParserConfigurationException | DOMException | SAXException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    private static void limpiarDatosDeListas()
+    {
+        lClientes.clear();
+        lVehiculos.clear();
+        lAlquileres.clear();
     }
     
 }

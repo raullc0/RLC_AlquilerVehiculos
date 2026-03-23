@@ -1,0 +1,128 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package objetos;
+
+import java.util.Objects;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+/**
+ *
+ * @author dam1
+ */
+public abstract class Vehiculo {
+    // Atributos
+    
+    private String matricula, marca, modelo;
+    private int cilindrada;
+    private boolean disponible;
+    private boolean deBaja;
+    
+    // Constructores
+    
+    public Vehiculo(String matricula, String marca, String modelo, int cilindrada)
+    {
+        this.matricula = matricula;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.cilindrada = cilindrada;
+        disponible = true;
+        deBaja = false;
+    }
+    
+    public Vehiculo(Vehiculo otroVehiculo) // Constructor copia
+    {
+        this.matricula = otroVehiculo.matricula;
+        this.marca = otroVehiculo.marca;
+        this.modelo = otroVehiculo.modelo;
+        this.cilindrada = otroVehiculo.cilindrada;
+        this.disponible = otroVehiculo.disponible;
+        this.deBaja = otroVehiculo.deBaja;
+    }
+    
+    // Metodos
+    
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
+    
+    public String getMatricula() 
+    {
+        return(matricula);
+    }
+    
+    public String getMarca() 
+    {
+        return(marca);
+    }
+    
+    public String getModelo() 
+    {
+        return(modelo);
+    }
+    
+    public int getCilindrada() 
+    {
+        return(cilindrada);
+    }
+    
+    public boolean isDisponible() 
+    {
+        return(disponible);
+    }
+    
+    public boolean estaDeBaja() 
+    {
+        return(deBaja);
+    }
+    
+    public void darDeBaja() 
+    {
+        deBaja = true;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() +
+                "\n--------------------------------" +
+                "\nMatricula: " + matricula +
+                "\nMarca: " + marca + 
+                "\nModelo: " + modelo +
+                "\nCilindrada: " + cilindrada +
+                "\nDisponible: " + disponible) +
+                "\n";
+    }
+    
+    public String escribirFichero()
+    {
+        return(matricula + "#" + marca + "#" + modelo + "#" + cilindrada + "#" + disponible + "#" + deBaja);
+    }
+    
+    public Element escribirXML(Document _doc) {
+        return (null);
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        boolean iguales = false ;
+        
+        if (this == o)
+            iguales =  true;
+        
+        else if (o == null || getClass() != o.getClass())
+            iguales = false;
+        
+        else
+        {
+            Vehiculo vehiculo = (Vehiculo) o;
+            iguales = Objects.equals( matricula, vehiculo.matricula);
+        }
+        
+        return iguales ;
+    }
+}
